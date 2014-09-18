@@ -25,13 +25,16 @@ int main (void)
   fprintf (file, "Blplplp\nTest on %d lines", 2);
 
   // read the file
+  rewind(file);
   char line1[100], line2[100];
   fgets (line1, 99, file);
   fgets (line2, 99, file);
 
   // print of the reading
-  for (i=0;i<=99;i++){
-    printf ("%d ",line1[i]);
+  i=0;
+  while(line1[i] != "\n"){
+    printf ("%c ",line1[i]);
+    i++;
   }
 
 
