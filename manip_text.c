@@ -1,6 +1,6 @@
 /********************************************/
-/* Decolle Anais                            */
-/* PA_1.c                                   */
+/* Decolle Anais - Peters Brice             */
+/* manip_text.c                             */
 /* The program read, write, modify a text.  */
 /********************************************/
 
