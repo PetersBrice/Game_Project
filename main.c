@@ -4,7 +4,7 @@
 /* It's the puzzle game.                   */
 /*******************************************/
 
-#include "pentamino.h"
+#include "pentomino.h"
 
 SDL_Surface* background;
 int WIDTH = 500;

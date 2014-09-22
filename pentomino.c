@@ -14,3 +14,6 @@ pentomino_ptr new_pentomino(char array_pent[5][5],double angle,SDL_Rect rcSrc,SD
   new_pent->rcSprite = rcSprite;
   return new_pent;
 }
+
+pentomino_ptr mirror(pentomino_ptr pentomino){
+}
