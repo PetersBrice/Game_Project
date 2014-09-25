@@ -16,4 +16,16 @@ pentomino_ptr new_pentomino(char array_pent[5][5],double angle,SDL_Rect rcSrc,SD
 }
 
 pentomino_ptr mirror(pentomino_ptr pentomino){
+  int i,j;
+  for (i = 0;i < 3;i++){
+    for (j = 0;j < 3;j++){
+      pentomino->array_pent[i][j]=pentomino->array_pent[i][j-1];
+    }
+  }
+  return pentomino;
 }
+
+pentomino_ptr turn(pentomino_ptr pentomino){
+  int i,j;
+  for (i = 0;i < 3; i++){
+    for (j = 0;j < 3;j++){

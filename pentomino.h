@@ -4,7 +4,7 @@
 /* Structure of pentomino                   */
 /********************************************/
 #define PENTOMINO_H
-#ifndef pentomino.h
+#ifndef PENTOMINO_H
 
 #include<stdio.h>
 #include<stdlib.h>
