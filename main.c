@@ -11,7 +11,7 @@ int WIDTH = 800;
 int HEIGHT = 600;
 
 void initSDL(void);
-void draw_framework (FILE *file);
+void draw_txt (FILE *file);
 
 
 /* initialization of SDL */
@@ -32,42 +32,36 @@ void initSDL(void)
 /* controls */
 
 
-/* draw the framework */
-void draw_framework (FILE *file)
+/* draw the shape in test.txt */
+void draw_txt (FILE *file)
 {
-  int col,lines = 0;
-  // maximum number of caracters in a line
-  int max_carac = 30;
-  char line [max_carac];
-  SDL_Surface *framework = NULL;
+  char line [20];
+  int i;
+  int size_square = 50;
   SDL_Rect position;
-
-  rewind(file);
-  // count the number of columns
-  while (fgetc(file) != '\n'){
-    col++;
+  SDL_Surface *square = NULL;
+  fgets(line, sizeof line, file);
+  position.x = 0;
+  position.y = 0;
+  while (line[0] != '\n' && line[0] != EOF){
+    i = 0;
+    while (line[i] != '\n'){
+      if (line[i] == '#'){
+	// load the sqaure with the dimensions and the color
+	square = SDL_CreateRGBSurface(SDL_HWSURFACE, size_square, size_square, 32, 0, 0, 0, 0);
+	SDL_FillRect(square, NULL, SDL_MapRGB(background->format, 255, 255, 255));
+	// draw the square and update the screen
+	SDL_BlitSurface(square, NULL, background, &position);
+	SDL_Flip(background);
+	SDL_FreeSurface(square);
+      }
+      position.x = position.x + size_square;
+      i++;
+    }
+    position.x = 0;
+    position.y = position.y + size_square;
+    fgets(line, sizeof line, file);
   }
-  col--;
-  // count the number of lines
-  rewind(file);
-  fgets(line, max_carac, file);
-  while (line[1] != '\n'){
-    lines++;
-    fgets(line, max_carac, file);
-  }
-  printf("%d col et %d lines\n", col, lines);
-
-  // load the framework with the dimensions and the color
-  framework = SDL_CreateRGBSurface(SDL_HWSURFACE, 50*col, 50*lines, 32, 0, 0, 0, 0);
-  SDL_FillRect(framework, NULL, SDL_MapRGB(background->format, 255, 255, 255));
-  // position of the framework
-  position.x = 200;
-  position.y = 100; 
-  // draw the framework and update the screen
-  SDL_BlitSurface(framework, NULL, background, &position);
-  SDL_Flip(background);
-
-  SDL_FreeSurface(framework);
 }
 
 /* main */
@@ -79,10 +73,13 @@ int main(int argc, char** argv)
   FILE *file;
 
   /* open the pentomino file */
-  file = fopen("pentomino.txt", "r");
-  /* draw the framework */
-  draw_framework(file);
-  /* close the pentomino file */
+  /* HERE test.txt NOT pentomino.txt*/
+  file = fopen("test.txt", "r");
+
+  /* draw the shape in the file */
+  draw_txt(file);
+
+  /* close the file */
   fclose(file);
 
   /* controls keyboard and mouse */
