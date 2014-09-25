@@ -11,7 +11,7 @@ int WIDTH = 500;
 int HEIGHT = 300;
 
 void initSDL(void);
-void wait_event (void);
+
 
 // initialization of SDL
 void initSDL(void)
@@ -20,33 +20,33 @@ void initSDL(void)
     fprintf(stderr, "Error initialization of SDL : %s\n", SDL_GetError());
     exit(EXIT_FAILURE);
   }
-
   atexit(SDL_Quit);
-  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
-  if (background == NULL){
-    fprintf(stderr, "Error grafic mode SDL : %s\n", SDL_GetError);
-    exit(EXIT_FAILURE);
-  }
+  // load of the background
+  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
 
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
 
-// wait an event with the mouse of the keyboard
-void wait_event(void)
-{
-  SDL_Event event;
-
-do
-  SDL_WaitEvent(&event);
- while(event.type != SDL_QUIT && event.type != SDL_KEYDOWN);
-}
+/* controls */
 
 // main
 int main(int argc, char** argv)
 {
   initSDL();
-  wait_event();
+  SDL_Event event;
+  int end = 0;
+
+  /* controls keyboard and mouse */
+  while (!end){
+    SDL_WaitEvent(&event);
+    switch (event.type){
+    case SDL_QUIT:
+      end = 1;
+      break;
+    }
+  }
+
   return EXIT_SUCCESS;
 }
 

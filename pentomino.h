@@ -3,12 +3,14 @@
 /* pentomino.h                              */
 /* Structure of pentomino                   */
 /********************************************/
-#define PENTOMINO_H
+
 #ifndef PENTOMINO_H
+#define PENTOMINO_H
+
 
 #include<stdio.h>
 #include<stdlib.h>
-#include<SDL/SDL.h>
+#include<SDL.h>
 typedef struct pentomino
 {
   char array_pent[5][5];
