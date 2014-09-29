@@ -22,4 +22,6 @@ pentomino_ptr new_pentomino(char array_pent[5][5],int position,square_ptr square
 
 pentomino_ptr mirror(pentomino_ptr pentomino);
 
+pentomino_ptr create(pentomino_ptr pentomino,int x,int y);
+
 #endif
