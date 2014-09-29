@@ -24,7 +24,7 @@ void initSDL(void)
   atexit(SDL_Quit);
 
   // load of the background
-  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE);
+  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
 
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
@@ -38,28 +38,28 @@ void draw_txt (FILE *file)
   char line [20];
   int i;
   int size_square = 50;
-  SDL_Rect position;
+  SDL_Rect position_square;
   SDL_Surface *square = NULL;
   fgets(line, sizeof line, file);
-  position.x = 0;
-  position.y = 0;
+  position_square.x = 0;
+  position_square.y = 0;
   while (line[0] != '\n' && line[0] != EOF){
     i = 0;
     while (line[i] != '\n'){
       if (line[i] == '#'){
-	// load the sqaure with the dimensions and the color
+	// load the square with the dimensions and the color
 	square = SDL_CreateRGBSurface(SDL_HWSURFACE, size_square, size_square, 32, 0, 0, 0, 0);
 	SDL_FillRect(square, NULL, SDL_MapRGB(background->format, 255, 255, 255));
 	// draw the square and update the screen
-	SDL_BlitSurface(square, NULL, background, &position);
+	SDL_BlitSurface(square, NULL, background, &position_square);
 	SDL_Flip(background);
 	SDL_FreeSurface(square);
       }
-      position.x = position.x + size_square;
+      position_square.x = position_square.x + size_square;
       i++;
     }
-    position.x = 0;
-    position.y = position.y + size_square;
+    position_square.x = 0;
+    position_square.y = position_square.y + size_square;
     fgets(line, sizeof line, file);
   }
 }
@@ -71,6 +71,7 @@ int main(int argc, char** argv)
   SDL_Event event;
   int end = 0;
   FILE *file;
+  SDL_Rect position_square, position_mouse;
 
   /* open the pentomino file */
   /* HERE test.txt NOT pentomino.txt*/
@@ -86,10 +87,22 @@ int main(int argc, char** argv)
   while (!end){
     SDL_WaitEvent(&event);
     switch (event.type){
+      // click on the cross
     case SDL_QUIT:
       end = 1;
       break;
+      // left click of the mouse
+    case SDL_MOUSEBUTTONUP:
+      if (event.button.button == SDL_BUTTON_LEFT){
+	position_mouse.x = event.button.x;
+	position_mouse.y = event.button.y;
+      }
+    case SDL_MOUSEMOTION:
+      position_square.x = event.motion.x;
+      position_square.y = event.motion.y;
+      break;
     }
+    SDL_Flip(background);
   }
 
 
