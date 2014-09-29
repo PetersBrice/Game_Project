@@ -30,7 +30,31 @@ void initSDL(void)
 }
 
 /* controls */
-
+/*
+void controls ()
+{
+  while (!end){
+    SDL_WaitEvent(&event);
+    switch (event.type){
+      // click on the cross
+    case SDL_QUIT:
+      end = 1;
+      break;
+      // left click of the mouse
+    case SDL_MOUSEBUTTONUP:
+      if (event.button.button == SDL_BUTTON_LEFT){
+	position_mouse.x = event.button.x;
+	position_mouse.y = event.button.y;
+      }
+    case SDL_MOUSEMOTION:
+      position_square.x = event.motion.x;
+      position_square.y = event.motion.y;
+      break;
+    }
+    SDL_Flip(background);
+  }
+}
+*/
 
 /* draw the shape in test.txt */
 void draw_txt (FILE *file)
@@ -72,6 +96,7 @@ int main(int argc, char** argv)
   int end = 0;
   FILE *file;
   SDL_Rect position_square, position_mouse;
+  SDL_Surface *smiley;
 
   /* open the pentomino file */
   /* HERE test.txt NOT pentomino.txt*/
@@ -82,6 +107,14 @@ int main(int argc, char** argv)
 
   /* close the file */
   fclose(file);
+
+  /* draw a smiley (to test movements) */
+  smiley = SDL_LoadBMP("smiley.bmp");
+  position_square.x = 500;
+  position_square.y = 300;
+  SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 255, 255, 255));
+  SDL_BlitSurface(smiley, NULL, background, &position_square);
+  SDL_Flip(background);
 
   /* controls keyboard and mouse */
   while (!end){
@@ -102,8 +135,13 @@ int main(int argc, char** argv)
       position_square.y = event.motion.y;
       break;
     }
+    SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 255, 255, 255));
+    SDL_BlitSurface(smiley, NULL, background, &position_square);
     SDL_Flip(background);
   }
+
+
+  SDL_FreeSurface(smiley);
 
 
   return EXIT_SUCCESS;
