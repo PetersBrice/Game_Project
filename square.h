@@ -12,6 +12,8 @@ typedef struct square
 } * square_ptr ;
 
 square_ptr new_square(SDL_Rect rcSrc, SDL_Rect rcSprite);
+
+void draw_square(square_ptr square,SDL_Surface *square_sprite,SDL_Surface *background);
   
 
 #endif

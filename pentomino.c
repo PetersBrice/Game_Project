@@ -14,6 +14,15 @@ pentomino_ptr new_pentomino(char array_pent[5][5],int position,square_ptr square
   return new_pent;
 }
 
+void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surface *background)
+{
+  int i ;
+  for(i=0;i<4;i++){
+    draw_square(pentomino->square[i],square_sprite,background);
+  }
+}
+
+
 pentomino_ptr mirror(pentomino_ptr pentomino){
   int i;
   int min = 2000;
@@ -40,14 +49,34 @@ pentomino_ptr mirror(pentomino_ptr pentomino){
   return pentomino;
 }
 
-pentomino_ptr create(pentomino_ptr pentomino,int x,int y){
+pentomino_ptr create(pentomino_ptr pentomino,int x,int y,FILE *file){
   int i = 0;
   int j = 0;
+  int find = 0;
+  char line[5];
+  file = fopen("test.txt","r");
+  while(find == 0){
+    fgets(line,5,file);
+    for(i = 0;i < 5;i++){
+      if(line[i] == '#'){
+	find = 1 ;
+      }
+    }
+  }
+  for (i = 0;i < 5; i++){
+    pentomino->array_pent[0][i] = line[i] ;
+  }
+  for(i = 1;i < 5; i++){
+    fgets(line,5,file);
+    for(j = 0;j < 5; j++){
+      pentomino->array_pent[i][j]= line[i];
+    }
+  }
   int nb_square = 0;
   while (nb_square < 5){
     for(i = 0;i < 5;i++){
       for (j = 0 ; j < 5 ;j++){
-	if (pentomino->array_pent[i][j] == "#"){
+	if (pentomino->array_pent[i][j] == '#'){
 	  pentomino->square[nb_square]->rcSrc.x=x+j*SIZE_SQUARE;
 	  pentomino->square[nb_square]->rcSrc.y=y+i*SIZE_SQUARE;
 	  nb_square++;
@@ -57,5 +86,5 @@ pentomino_ptr create(pentomino_ptr pentomino,int x,int y){
   }
   return pentomino;
 }
-	  
-	  
+
+	    
