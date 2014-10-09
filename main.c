@@ -98,6 +98,7 @@ int main(int argc, char** argv)
   FILE *file;
   SDL_Rect position_mouse, position_smiley;
   SDL_Surface *smiley,*square_sprite;
+  pentomino_ptr pentomino;
  
   square_sprite = NULL ;
   /* open the pentomino file */
@@ -105,12 +106,19 @@ int main(int argc, char** argv)
   file = fopen("test.txt", "r");
 
   /* draw the shape in the file */
-  draw_txt(file);
+  //draw_txt(file);
+
+  /* create a pentomino */
+  pentomino = create(10, 10, file);
+  square_sprite = SDL_LoadBMP("smiley.bmp");
+  draw_pentomino(pentomino, square_sprite, background);
+  SDL_Flip(background);
 
   /* close the file */
   fclose(file);
 
   /* draw a smiley (to test movements) */
+  /*
   smiley = SDL_LoadBMP("smiley.bmp");
   square_sprite = SDL_LoadBMP("smiley.bmp");
   position_smiley.x = 500;
@@ -118,7 +126,7 @@ int main(int argc, char** argv)
   SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
   SDL_BlitSurface(smiley, NULL, background, &position_smiley);
   SDL_Flip(background);
-
+  */
 
   /* controls keyboard and mouse */
   while (!end){

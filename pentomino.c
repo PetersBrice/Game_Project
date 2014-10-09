@@ -17,8 +17,9 @@ pentomino_ptr new_pentomino(char array_pent[5][5],int position,square_ptr square
 void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surface *background)
 {
   int i ;
-  for(i=0;i<4;i++){
+  for(i=0;i<5;i++){
     draw_square(pentomino->square[i],square_sprite,background);
+   
   }
 }
 
@@ -49,11 +50,13 @@ pentomino_ptr mirror(pentomino_ptr pentomino){
   return pentomino;
 }
 
-pentomino_ptr create(pentomino_ptr pentomino,int x,int y,FILE *file){
+pentomino_ptr create(int x,int y,FILE *file){
   int i = 0;
   int j = 0;
   int find = 0;
   char line[5];
+  SDL_Rect rcSrc_tmp,rcSprite_tmp;
+  pentomino_ptr pentomino = (pentomino_ptr)malloc(sizeof(struct pentomino));
   file = fopen("test.txt","r");
   while(find == 0){
     fgets(line,5,file);
@@ -74,13 +77,29 @@ pentomino_ptr create(pentomino_ptr pentomino,int x,int y,FILE *file){
   }
   int nb_square = 0;
   while (nb_square < 5){
-    for(i = 0;i < 5;i++){
-      for (j = 0 ; j < 5 ;j++){
+    i=0;
+    while(i<5){
+      j=0;
+      while(j<5){
 	if (pentomino->array_pent[i][j] == '#'){
-	  pentomino->square[nb_square]->rcSrc.x=x+j*SIZE_SQUARE;
-	  pentomino->square[nb_square]->rcSrc.y=y+i*SIZE_SQUARE;
+	  rcSrc_tmp.x = x+j*SIZE_SQUARE;
+
+
+
+
+
+	  rcSrc_tmp.y = y+i*SIZE_SQUARE;
+	  rcSprite_tmp.x = 0 ;
+	  rcSprite_tmp.y = 0 ;
+	  rcSprite_tmp.w = 30 ;
+	  rcSprite_tmp.h = 30 ;
+	  pentomino->square[nb_square]=new_square(rcSrc_tmp,rcSprite_tmp);
+	  printf("%d\n",pentomino->square[nb_square]->rcSrc.x);
 	  nb_square++;
+	  printf("+1\n");
+	  j++;
 	}
+	i++;
       }
     }
   }

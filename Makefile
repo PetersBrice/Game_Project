@@ -33,7 +33,7 @@ LIBS =
 
 # define the C source files
 # TODO: update and complete the following line with your .c files names
-SRCS = main.c pentomino.c
+SRCS = main.c pentomino.c square.c
 # define the C object files 
 #
 # This uses Suffix Replacement within a macro:
