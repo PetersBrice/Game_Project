@@ -25,6 +25,7 @@ void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surfa
 pentomino_ptr mirror(pentomino_ptr pentomino);
 
 pentomino_ptr create(int x,int y,FILE *file);
+pentomino_ptr shape(int x, int y, FILE *file);
 
 
 #endif
