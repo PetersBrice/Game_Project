@@ -12,6 +12,7 @@ int HEIGHT = 600;
 
 void initSDL(void);
 void draw_txt (FILE *file);
+int controls(void);
 
 
 /* initialization of SDL */
@@ -30,31 +31,31 @@ void initSDL(void)
 }
 
 /* controls */
-/*
-void controls ()
+
+int controls (void)
 {
-  while (!end){
+  SDL_Event event;
     SDL_WaitEvent(&event);
     switch (event.type){
       // click on the cross
     case SDL_QUIT:
-      end = 1;
+      return 1;
       break;
       // left click of the mouse
     case SDL_MOUSEBUTTONUP:
       if (event.button.button == SDL_BUTTON_LEFT){
-	position_mouse.x = event.button.x;
-	position_mouse.y = event.button.y;
+	//position_mouse.x = event.button.x;
+	//position_mouse.y = event.button.y;
       }
     case SDL_MOUSEMOTION:
-      position_square.x = event.motion.x;
-      position_square.y = event.motion.y;
+      //position_square.x = event.motion.x;
+      //position_square.y = event.motion.y;
       break;
     }
     SDL_Flip(background);
-  }
+    return 0;
 }
-*/
+
 
 
 /* draw the shape in test.txt */
@@ -93,60 +94,43 @@ void draw_txt (FILE *file)
 int main(int argc, char** argv)
 {
   initSDL();
-  SDL_Event event;
+  //SDL_Event event;
   int end = 0;
   FILE *file;
-  SDL_Rect position_mouse, position_smiley;
-  SDL_Surface *smiley,*square_sprite;
+  SDL_Surface *square_sprite;
+  pentomino_ptr pentomino;
  
   square_sprite = NULL ;
   /* open the pentomino file */
   /* HERE test.txt NOT pentomino.txt*/
   file = fopen("test.txt", "r");
-
+  rewind(file);
   /* draw the shape in the file */
-  draw_txt(file);
+  //draw_txt(file);
+
+  /* create a pentomino */
+  
+  //create(10,10,file);
+  /*
+  square_sprite = SDL_LoadBMP("smiley.bmp");
+  draw_pentomino(pentomino, square_sprite, background);
+  SDL_Flip(background);
+  */
+
+  pentomino = shape(10, 10, file);
+  square_sprite = SDL_LoadBMP("smiley.bmp");
+  draw_pentomino(pentomino, square_sprite, background);
+  SDL_Flip(background);
 
   /* close the file */
   fclose(file);
 
-  /* draw a smiley (to test movements) */
-  smiley = SDL_LoadBMP("smiley.bmp");
-  square_sprite = SDL_LoadBMP("smiley.bmp");
-  position_smiley.x = 500;
-  position_smiley.y = 300;
-  SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
-  SDL_BlitSurface(smiley, NULL, background, &position_smiley);
-  SDL_Flip(background);
-
-
   /* controls keyboard and mouse */
-  while (!end){
-    SDL_WaitEvent(&event);
-    
-    switch (event.type){
-      // click on the cross
-    case SDL_QUIT:
-      end = 1;
-      break;
-      // left click of the mouse
-    case SDL_MOUSEBUTTONUP:
-      if (event.button.button == SDL_BUTTON_LEFT){
-	position_mouse.x = event.button.x;
-	position_mouse.y = event.button.y;
-      }
-    case SDL_MOUSEMOTION:
-      //position_smiley.x = event.motion.x;
-      //position_smiley.y = event.motion.y;
-      break;
-    }
-    //SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 255, 255, 255));
-    //SDL_BlitSurface(smiley, NULL, background, &position_smiley);
-    //SDL_Flip(background);
+  while (end!=1){
+    end=controls();
+
   }
 
-
-  //SDL_FreeSurface(smiley);
 
 
   return EXIT_SUCCESS;

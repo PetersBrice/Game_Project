@@ -1,5 +1,6 @@
 #include "pentomino.h"
 #define SIZE_SQUARE 30
+#define MAXP 5 // maximum des pentomino
 
 pentomino_ptr new_pentomino(char array_pent[5][5],int position,square_ptr square)
 {
@@ -17,8 +18,9 @@ pentomino_ptr new_pentomino(char array_pent[5][5],int position,square_ptr square
 void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surface *background)
 {
   int i ;
-  for(i=0;i<4;i++){
+  for(i=0;i<5;i++){
     draw_square(pentomino->square[i],square_sprite,background);
+   
   }
 }
 
@@ -49,11 +51,11 @@ pentomino_ptr mirror(pentomino_ptr pentomino){
   return pentomino;
 }
 
-pentomino_ptr create(pentomino_ptr pentomino,int x,int y,FILE *file){
-  int i = 0;
-  int j = 0;
-  int find = 0;
+pentomino_ptr create(int x, int y, FILE *file){
+  int i,j,find = 0;
   char line[5];
+  SDL_Rect rcSrc,rcSprite;
+  pentomino_ptr pentomino = (pentomino_ptr)malloc(sizeof(struct pentomino));
   file = fopen("test.txt","r");
   while(find == 0){
     fgets(line,5,file);
@@ -63,28 +65,91 @@ pentomino_ptr create(pentomino_ptr pentomino,int x,int y,FILE *file){
       }
     }
   }
-  for (i = 0;i < 5; i++){
-    pentomino->array_pent[0][i] = line[i] ;
-  }
-  for(i = 1;i < 5; i++){
-    fgets(line,5,file);
-    for(j = 0;j < 5; j++){
-      pentomino->array_pent[i][j]= line[i];
-    }
-  }
   int nb_square = 0;
   while (nb_square < 5){
-    for(i = 0;i < 5;i++){
-      for (j = 0 ; j < 5 ;j++){
+    i=0;
+    while(i<5){
+      j=0;
+      while(j<5){
 	if (pentomino->array_pent[i][j] == '#'){
-	  pentomino->square[nb_square]->rcSrc.x=x+j*SIZE_SQUARE;
-	  pentomino->square[nb_square]->rcSrc.y=y+i*SIZE_SQUARE;
+	  rcSrc.x = x+j*SIZE_SQUARE;
+	  rcSrc.y = y+i*SIZE_SQUARE;
+	  rcSprite.x = 0 ;
+	  rcSprite.y = 0 ;
+	  rcSprite.w = 30 ;
+	  rcSprite.h = 30 ;
+	  pentomino->square[nb_square]=new_square(rcSrc,rcSprite);
+	  printf("x %d\n",pentomino->square[nb_square]->rcSrc.x);
 	  nb_square++;
+	  printf("+1\n");
+	  j++;
 	}
+	i++;
       }
     }
   }
   return pentomino;
 }
 
+
+
+
+// fonctionne tant que i<4 et j<5...
+pentomino_ptr shape (int x, int y, FILE *file)
+{
+  pentomino_ptr pentomino = (pentomino_ptr)malloc(sizeof(struct pentomino));
+  char line[5];
+  int find,i,j,nb_square = 0;
+  SDL_Rect rcSrc,rcSprite;
+
+  // search the first #
+  while (!find){
+    fgets(line,MAXP,file);
+    for (i = 0;i < 5;i++){
+      if (line[i] == '#'){
+	find = 1;
+      }
+    }
+  }
+  // put the first line of # in the array
+  for (i=0;i<5;i++){
+    pentomino->array_pent[i][0] = line[i];
+  }
+  // put all the rest of # in the array on 4 lines (pentomino 5*5 max)
+  for (j=1;j<5;j++){
+    fgets(line,MAXP,file);
+    for (i=0;i<5;i++){
+      pentomino->array_pent[i][j] = line[i];
+    }
+  }
+  j=0;
+  // while there isn't 5 squares for the pentomino
+  while (nb_square < 5){
+    for (j=0;j<5;j++){
+      if(nb_square < 5){
+	for (i=0;i<5;i++){
+	  // create a square if we find a '#' in the array
+	  if (pentomino->array_pent[i][j] == '#' && nb_square < 5){
+	    // position of the square in x
+	    rcSrc.x = x + i*SIZE_SQUARE;
+	    printf("rcSrc.x = %d et i = %d\n",rcSrc.x,i);
+	    // position of the square in y (boucle for wan't begin with j=0 so I use j-1 to have the good position)
+	    rcSrc.y = y + (j-1)*SIZE_SQUARE;
+	    printf("rcSrc.y  = %d et j = %d\n",rcSrc.y,j);
+	    // position et dimensions of the square in the .bmp
+	    rcSprite.x = 0 ;
+	    rcSprite.y = 0 ;
+	    rcSprite.w = 30 ;
+	    rcSprite.h = 30 ;
+	    // create the square
+	    pentomino->square[nb_square]=new_square(rcSrc,rcSprite);
+	    nb_square++;
+	    printf("+1\n");
+	  }
+	}
+      }
+    }
+  }  
+  return pentomino;
+}
 	    
