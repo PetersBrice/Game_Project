@@ -3,6 +3,7 @@
 /* pentomino.h                              */
 /* Structure of pentomino                   */
 /********************************************/
+#include <string.h>
 
 #ifndef PENTOMINO_H
 #define PENTOMINO_H
@@ -24,9 +25,12 @@ void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surfa
 
 pentomino_ptr mirror(pentomino_ptr pentomino);
 
+void file_array(char array_file[1000],FILE* file);
 
-pentomino_ptr create(int x,int y,FILE *file);
-pentomino_ptr shape(int x, int y, FILE *file);
+pentomino_ptr create(int x, int y, FILE *file);
+pentomino_ptr shape (int x, int y, FILE *file);
+
+int new_pent(char array_file[1000],int pos_file,int position,int x,int y);
 
 
 #endif

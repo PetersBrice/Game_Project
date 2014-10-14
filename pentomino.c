@@ -150,5 +150,63 @@ pentomino_ptr shape (int x, int y, FILE *file)
   }  
   return pentomino;
 }
-	    
-
+	
+void file_array(char array_file[1000],FILE *file){
+  int i = 0;
+  char array_temp[100] = "";
+  while(fgets(array_temp,100,file) != NULL){
+    strcat(array_file,array_temp);
+    i++;
+  }
+}
+      
+int new_pent(char array_file[1000],int pos_file,int position,int x,int y){
+  int i,j,Nb_square=0;
+  SDL_Rect rcSrc,rcSprite;
+  pentomino_ptr pentomino = (pentomino_ptr)malloc(sizeof(struct pentomino));
+  pentomino->position = position;
+  for(i=0;i<5;i++){
+    for(j=0;j<5;j++){
+      pentomino->array_pent[i][j] = 'o';
+    }
+  }
+  i = 0;
+  j = 0;
+  while(Nb_square<5){
+    if (array_file[pos_file] ==' '){
+      j++;
+    }else if(array_file[pos_file] == '#'){
+      pentomino->array_pent[i][j] = '#';
+      j++;
+    } else {
+      i++;
+      j = 0;
+    }
+    pos_file++ ;
+  }
+  Nb_square = 0;
+  while (Nb_square < 5){
+    i=0;
+    while(i<5){
+      j=0;
+      while(j<5){
+	if (pentomino->array_pent[i][j] == '#'){
+	  rcSrc.x = x+j*SIZE_SQUARE;
+	  rcSrc.y = y+i*SIZE_SQUARE;
+	  rcSprite.x = 0 ;
+	  rcSprite.y = 0 ;
+	  rcSprite.w = 30 ;
+	  rcSprite.h = 30 ;
+	  pentomino->square[Nb_square]=new_square(rcSrc,rcSprite);
+	  printf("x %d\n",pentomino->square[Nb_square]->rcSrc.x);
+	  Nb_square++;
+	  printf("+1\n");
+	  j++;
+	}
+	i++;
+      }
+    }
+  }
+  return pos_file;
+}
+      

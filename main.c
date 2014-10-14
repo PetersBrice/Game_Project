@@ -107,6 +107,7 @@ int main(int argc, char** argv)
   //SDL_Event event;
   int end = 0;
   FILE *file;
+  char array_file [1000];
   SDL_Surface *square_sprite;
   pentomino_ptr pentomino;
  
@@ -127,7 +128,7 @@ int main(int argc, char** argv)
   SDL_Flip(background);
   */
 
-  pentomino = shape(10, 10, file);
+  //pentomino = shape(10, 10, file);
   square_sprite = SDL_LoadBMP("smiley.bmp");
   draw_pentomino(pentomino, square_sprite, background);
   SDL_Flip(background);
