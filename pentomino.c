@@ -1,8 +1,8 @@
 #include "pentomino.h"
 #define SIZE_SQUARE 30
-#define MAXP 5 // maximum des pentomino
+#define MAXP 5 // maximum of pentomino
 
-pentomino_ptr new_pentomino(char array_pent[5][5],int position,square_ptr square)
+pentomino_ptr new_pentomino(int array_pent[5][5],int position,square_ptr square)
 {
   int i,j;
   pentomino_ptr new_pent = (pentomino_ptr)malloc(sizeof(struct pentomino));
@@ -92,8 +92,6 @@ pentomino_ptr create(int x, int y, FILE *file){
 }
 
 
-
-
 // fonctionne tant que i<4 et j<5...
 pentomino_ptr shape (int x, int y, FILE *file)
 {
@@ -142,7 +140,7 @@ pentomino_ptr shape (int x, int y, FILE *file)
 	    rcSprite.w = 30 ;
 	    rcSprite.h = 30 ;
 	    // create the square
-	    pentomino->square[nb_square]=new_square(rcSrc,rcSprite);
+	    pentomino->square[nb_square]= new_square(rcSrc,rcSprite);
 	    nb_square++;
 	    printf("+1\n");
 	  }
@@ -153,3 +151,4 @@ pentomino_ptr shape (int x, int y, FILE *file)
   return pentomino;
 }
 	    
+
