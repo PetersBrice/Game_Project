@@ -5,6 +5,7 @@
 /*******************************************/
 
 #include "pentomino.h"
+#include "area.h"
 
 SDL_Surface* background;
 int WIDTH = 800;
@@ -40,6 +41,15 @@ int controls (void)
       // click on the cross
     case SDL_QUIT:
       return 1;
+      break;
+    case SDL_KEYDOWN:
+      switch (event.key.keysym.sym){
+
+      case SDLK_a:
+	printf("A\n");
+	return 2;
+	break;
+      }
       break;
       // left click of the mouse
     case SDL_MOUSEBUTTONUP:
@@ -110,7 +120,7 @@ int main(int argc, char** argv)
 
   /* create a pentomino */
   
-  //create(10,10,file);
+  //pentomino = create(10,10,file);
   /*
   square_sprite = SDL_LoadBMP("smiley.bmp");
   draw_pentomino(pentomino, square_sprite, background);
@@ -121,6 +131,12 @@ int main(int argc, char** argv)
   square_sprite = SDL_LoadBMP("smiley.bmp");
   draw_pentomino(pentomino, square_sprite, background);
   SDL_Flip(background);
+  
+
+
+  area_ptr area = init_area();
+  array_area(area,file);
+  draw_area(area,background);
 
   /* close the file */
   fclose(file);
@@ -128,6 +144,12 @@ int main(int argc, char** argv)
   /* controls keyboard and mouse */
   while (end!=1){
     end=controls();
+    if (controls() == 2){
+      pentomino = mirror(pentomino);
+      draw_pentomino(pentomino, square_sprite, background);
+      SDL_Flip(background);
+    }
+
 
   }
 
