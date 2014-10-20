@@ -4,6 +4,8 @@
 /* Structure of pentomino                   */
 /********************************************/
 #include <string.h>
+#include <stdbool.h>
+#include <math.h>
 
 #ifndef PENTOMINO_H
 #define PENTOMINO_H
@@ -31,6 +33,16 @@ pentomino_ptr create(int x, int y, FILE *file);
 pentomino_ptr shape (int x, int y, FILE *file);
 
 int new_pent(char array_file[1000],int pos_file,int position,int x,int y);
+
+int begin_pent (char array_file[1000]);
+
+int nb_pent(char array_file[1000]);
+
+int new_array(char array_file[1000],int pos_file,int position,int x,int y,char array_pent[5][5]);
+
+bool test_pento(char array_file[1000]);
+
+int size_area(char array_file[1000]);
 
 
 #endif

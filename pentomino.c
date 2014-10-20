@@ -160,12 +160,12 @@ void file_array(char array_file[1000],FILE *file){
   }
 }
 
-int begin_pent (char array_file [1000]){
-  bool first = false;
+int begin_pent (char array_file[1000]){
+  bool start = false;
   int i = 0;
-  while(!first && i<1000){
-    if(array_file[i] == '\n' && file_array[i+1] == '\n'){
-      first = true;
+  while(!start && i<1000){
+    if(array_file[i] == '\n' && array_file[i+1] == '\n'){
+      start = true;
     }
     i++;
   }
@@ -173,10 +173,10 @@ int begin_pent (char array_file [1000]){
 }
 
 int nb_pent(char array_file[1000]){
-  int nb_pent,nb_square;
+  int nb_pent,nb_square,i;
   nb_pent = 0;
   nb_square = 0;
-  int i = begin_pent(array_file[1000]);
+  i = begin_pent(array_file);
   for (i;i<1000;i++){
     if(array_file[i]=='#'){
       nb_square++;
@@ -210,6 +210,12 @@ int new_array(char array_file[1000],int pos_file,int position,int x,int y,char a
     pos_file++ ;
   }
   return pos_file;
+}
+
+bool test_pento(char array_file[1000]){
+  int area = size_area(array_file);
+  int nb_pento = nb_pent(array_file);
+  return area % nb_pento == 0;
 }
 
 /*maybe move it to area.c*/
