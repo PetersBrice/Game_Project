@@ -159,15 +159,40 @@ void file_array(char array_file[1000],FILE *file){
     i++;
   }
 }
-      
-int new_pent(char array_file[1000],int pos_file,int position,int x,int y){
+
+int begin_pent (char array_file [1000]){
+  bool first = false;
+  int i = 0;
+  while(!first && i<1000){
+    if(array_file[i] == '\n' && file_array[i+1] == '\n'){
+      first = true;
+    }
+    i++;
+  }
+  return i;
+}
+
+int nb_pent(char array_file[1000]){
+  int nb_pent,nb_square;
+  nb_pent = 0;
+  nb_square = 0;
+  int i = begin_pent(array_file[1000]);
+  for (i;i<1000;i++){
+    if(array_file[i]=='#'){
+      nb_square++;
+    }else if(array_file[i]='\n' && array_file[i+1]=='\n' && nb_square %5 ==0){
+      nb_pent++;
+    }
+  }
+  return nb_pent;
+}
+
+
+int new_array(char array_file[1000],int pos_file,int position,int x,int y,char array_pent[5][5]){
   int i,j,Nb_square=0;
-  SDL_Rect rcSrc,rcSprite;
-  pentomino_ptr pentomino = (pentomino_ptr)malloc(sizeof(struct pentomino));
-  pentomino->position = position;
   for(i=0;i<5;i++){
     for(j=0;j<5;j++){
-      pentomino->array_pent[i][j] = 'o';
+      array_pent[i][j] = 'o';
     }
   }
   i = 0;
@@ -176,7 +201,7 @@ int new_pent(char array_file[1000],int pos_file,int position,int x,int y){
     if (array_file[pos_file] ==' '){
       j++;
     }else if(array_file[pos_file] == '#'){
-      pentomino->array_pent[i][j] = '#';
+      array_pent[i][j] = '#';
       j++;
     } else {
       i++;
@@ -184,29 +209,23 @@ int new_pent(char array_file[1000],int pos_file,int position,int x,int y){
     }
     pos_file++ ;
   }
-  Nb_square = 0;
-  while (Nb_square < 5){
-    i=0;
-    while(i<5){
-      j=0;
-      while(j<5){
-	if (pentomino->array_pent[i][j] == '#'){
-	  rcSrc.x = x+j*SIZE_SQUARE;
-	  rcSrc.y = y+i*SIZE_SQUARE;
-	  rcSprite.x = 0 ;
-	  rcSprite.y = 0 ;
-	  rcSprite.w = 30 ;
-	  rcSprite.h = 30 ;
-	  pentomino->square[Nb_square]=new_square(rcSrc,rcSprite);
-	  printf("x %d\n",pentomino->square[Nb_square]->rcSrc.x);
-	  Nb_square++;
-	  printf("+1\n");
-	  j++;
-	}
-	i++;
-      }
-    }
-  }
   return pos_file;
 }
-      
+
+/*maybe move it to area.c*/
+
+int size_area(char array_file[1000]){
+  bool end = false;
+  int area_size,i;
+  i = 0;
+  area_size = 0;
+  while (!end){
+    if(array_file[i] == '\n' && array_file[i+1]=='\n'){
+      end=true;
+    }else if (array_file[i] == '#'){
+      area_size ++;
+    }
+    i++;
+  }
+  return area_size;
+}
