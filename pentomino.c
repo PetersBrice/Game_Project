@@ -1,4 +1,5 @@
 #include "pentomino.h"
+#include <assert.h>
 #define SIZE_SQUARE 30
 #define MAXP 5 // maximum of pentomino
 
@@ -6,8 +7,8 @@ pentomino_ptr new_pentomino(int position)
 {
   int i,j;
   pentomino_ptr new_pent = (pentomino_ptr)malloc(sizeof(struct pentomino));
-  for (i = 0;i < 4;i++){
-    for(j = 0;j < 4;j++){
+  for (i = 0;i <= 4;i++){
+    for(j = 0;j <= 4;j++){
       new_pent->array_pent[i][j] = 'o';
     }
   }
@@ -154,13 +155,21 @@ pentomino_ptr shape (int x, int y, FILE *file)
   return pentomino;
 }
 	
-void file_array(char array_file[1000],FILE *file){
+int file_array(char array_file[1000],FILE *file) {
+  int i = -1;
+  while(!feof(file) && i++<1000) {
+    array_file[i] = (char)fgetc(file);
+  }
+  return i;
+/*
   int i = 0;
   char array_temp[100] = "";
   while(fgets(array_temp,100,file) != NULL){
     strcat(array_file,array_temp);
     i++;
   }
+  return i;
+*/
 }
 
 int begin_pent (char array_file[1000]){
@@ -172,23 +181,20 @@ int begin_pent (char array_file[1000]){
     }
     i++;
   }
-  return i;
+  return i+1;
 }
 
-int nb_pent(char array_file[1000]){
-  int nb_pent,nb_square,i;
-  nb_pent = 0;
+int nb_pent(char array_file[1000], int array_end) {
+  int nb_square,i;
   nb_square = 0;
   i = begin_pent(array_file);
-  while (array_file[i]!='\o'){
-    if(array_file[i]=='#'){
-      nb_square++;
-    }else if(/*array_file[i]='\n' && array_file[i+1]=='\n' && */nb_square %5 ==0){
-      nb_pent++;
+  for (;i<array_end; i++) {
+    if (array_file[i]=='#') {
+       nb_square++;
     }
-    i++;
   }
-  return nb_pent;
+  assert((nb_square/5)*5 == nb_square);
+  return nb_square/5;
 }
 
 
@@ -202,24 +208,27 @@ int new_array(char array_file[1000],int pos_file,char array_pent[5][5]){
   i = 0;
   j = 0;
   while(Nb_square<5){
-    if (array_file[pos_file] ==' '){
-      j++;
+    printf("pos_file = %d\n",pos_file);
+    if (array_file[pos_file] =='\n'){
+      i++;
+      j = 0;
     }else if(array_file[pos_file] == '#'){
       array_pent[i][j] = '#';
       j++;
+      Nb_square++;
     } else {
-      i++;
-      j = 0;
+      j++;
     }
     pos_file++ ;
   }
   return pos_file;
 }
 
-bool test_pento(char array_file[1000]){
+bool test_pento(char array_file[1000], int array_end){
   int area = size_area(array_file);
-  int nb_pento = nb_pent(array_file);
+  int nb_pento = nb_pent(array_file, array_end);
   return area % nb_pento == 0;
+
 }
 
 /*maybe move it to area.c*/
@@ -263,11 +272,10 @@ pentomino_ptr get_square(pentomino_ptr pentomino ,int pos_x,int pos_y){
   return pentomino;
 }
 
-void tab_pento (char array_file[1000],pentomino_ptr pento_array[20]){
+void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end){
   int nb_pento,i,pos_file ;
-  nb_pento = nb_pent(array_file) ;
+  nb_pento = nb_pent(array_file, array_end) ;
   pos_file = begin_pent(array_file) ;
-	printf("nb_pento = %d", nb_pento);
   for(i = 0;i<nb_pento;i++){
     pento_array[i] = new_pentomino(nb_pento) ;
     new_array(array_file,pos_file,pento_array[i]->array_pent);

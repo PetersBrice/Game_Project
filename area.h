@@ -11,6 +11,7 @@ typedef struct area
   char shape[10][10];
   square_ptr square[100];
   SDL_Rect pos_area;
+  int nb_pent;
   int array_area[MAXW][MAXH];
 } * area_ptr;
 
