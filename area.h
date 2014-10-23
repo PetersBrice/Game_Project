@@ -8,7 +8,8 @@
 
 typedef struct area
 {
-  int nb_pent;
+  char shape[10][10];
+  square_ptr square[100];
   SDL_Rect pos_area;
   int array_area[MAXW][MAXH];
 } * area_ptr;

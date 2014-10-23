@@ -2,13 +2,13 @@
 #define SIZE_SQUARE 30
 #define MAXP 5 // maximum of pentomino
 
-pentomino_ptr new_pentomino(int array_pent[5][5],int position,square_ptr square)
+pentomino_ptr new_pentomino(int position)
 {
   int i,j;
   pentomino_ptr new_pent = (pentomino_ptr)malloc(sizeof(struct pentomino));
   for (i = 0;i < 4;i++){
     for(j = 0;j < 4;j++){
-      new_pent->array_pent[i][j] = array_pent[i][j];
+      new_pent->array_pent[i][j] = 'o';
     }
   }
   new_pent->position = position;
@@ -188,7 +188,7 @@ int nb_pent(char array_file[1000]){
 }
 
 
-int new_array(char array_file[1000],int pos_file,int position,int x,int y,char array_pent[5][5]){
+int new_array(char array_file[1000],int pos_file,char array_pent[5][5]){
   int i,j,Nb_square=0;
   for(i=0;i<5;i++){
     for(j=0;j<5;j++){
@@ -235,3 +235,65 @@ int size_area(char array_file[1000]){
   }
   return area_size;
 }
+
+pentomino_ptr get_square(pentomino_ptr pentomino ,int pos_x,int pos_y){
+  int i,j,nb_square;
+  nb_square = 0;
+  SDL_Rect rcSrc,rcSprite;
+  for(i = 0;i < 5;i++){
+    for(j = 0;j < 5;j++){
+      if (pentomino->array_pent[i][j]){
+	 rcSrc.x = pos_x + i*SIZE_SQUARE;
+	 rcSrc.y = pos_y + (j-1)*SIZE_SQUARE;
+	 rcSprite.x = 0 ;
+	 rcSprite.y = 0 ;
+	 rcSprite.w = 30 ;
+	 rcSprite.h = 30 ;
+	 pentomino->square[nb_square]= new_square(rcSrc,rcSprite);
+	 nb_square++;
+      }
+    }
+  }	
+  return pentomino;
+}
+
+void tab_pento (char array_file[1000],pentomino_ptr pento_array[20]){
+  int nb_pento,i,pos_file ;
+  nb_pento = nb_pent(array_file) ;
+  pos_file = begin_pent(array_file) ;
+  for(i = 0;i<nb_pento;i++){
+    pento_array[i] = new_pentomino(nb_pento) ;
+    new_array(array_file,pos_file,pento_array[i]->array_pent);
+    pento_array[i] = get_square(pento_array[i],30,30);
+  }
+} 
+    
+    
+void get_area(char array_file[1000],char shape[10][10]){
+  int size,i,j,nb_square,pos_file;
+  nb_square=0;
+  size = size_area(array_file);
+  for(i = 0;i<10;i++){
+    for(j = 0;j<10;j++){
+      shape[i][j] = 'o';
+    }
+  }
+  i = 0;
+  j = 0;
+  pos_file = 0;
+  while(nb_square<size){
+    if (array_file[pos_file] == '#'){
+      shape[i][j] = '#';
+      i++;
+      nb_square++;
+    }else if(array_file[pos_file] == ' '){
+      i++;
+    }else{
+      i = 0;
+      j++;
+    }
+    pos_file++;
+  }
+}
+      
+  
