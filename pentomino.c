@@ -11,6 +11,9 @@ pentomino_ptr new_pentomino(int position)
       new_pent->array_pent[i][j] = 'o';
     }
   }
+  for (i=0; i<5; i++) {
+    new_pent->square[i] = NULL;
+  }
   new_pent->position = position;
   return new_pent;
 }
@@ -177,12 +180,13 @@ int nb_pent(char array_file[1000]){
   nb_pent = 0;
   nb_square = 0;
   i = begin_pent(array_file);
-  for (i;i<1000;i++){
+  while (array_file[i]!='\o'){
     if(array_file[i]=='#'){
       nb_square++;
-    }else if(array_file[i]='\n' && array_file[i+1]=='\n' && nb_square %5 ==0){
+    }else if(/*array_file[i]='\n' && array_file[i+1]=='\n' && */nb_square %5 ==0){
       nb_pent++;
     }
+    i++;
   }
   return nb_pent;
 }
@@ -240,20 +244,22 @@ pentomino_ptr get_square(pentomino_ptr pentomino ,int pos_x,int pos_y){
   int i,j,nb_square;
   nb_square = 0;
   SDL_Rect rcSrc,rcSprite;
-  for(i = 0;i < 5;i++){
-    for(j = 0;j < 5;j++){
-      if (pentomino->array_pent[i][j]){
-	 rcSrc.x = pos_x + i*SIZE_SQUARE;
-	 rcSrc.y = pos_y + (j-1)*SIZE_SQUARE;
-	 rcSprite.x = 0 ;
-	 rcSprite.y = 0 ;
-	 rcSprite.w = 30 ;
-	 rcSprite.h = 30 ;
-	 pentomino->square[nb_square]= new_square(rcSrc,rcSprite);
-	 nb_square++;
+  while (nb_square<5){
+    for(i = 0;i < 5;i++){
+      for(j = 0;j < 5;j++){
+	if (pentomino->array_pent[i][j]){
+	  rcSrc.x = pos_x + i*SIZE_SQUARE;
+	  rcSrc.y = pos_y + (j-1)*SIZE_SQUARE;
+	  rcSprite.x = 0 ;
+	  rcSprite.y = 0 ;
+	  rcSprite.w = 30 ;
+	  rcSprite.h = 30 ;
+	  pentomino->square[nb_square]= new_square(rcSrc,rcSprite);
+	  nb_square++;
+	}
       }
     }
-  }	
+  }
   return pentomino;
 }
 
@@ -261,6 +267,7 @@ void tab_pento (char array_file[1000],pentomino_ptr pento_array[20]){
   int nb_pento,i,pos_file ;
   nb_pento = nb_pent(array_file) ;
   pos_file = begin_pent(array_file) ;
+	printf("nb_pento = %d", nb_pento);
   for(i = 0;i<nb_pento;i++){
     pento_array[i] = new_pentomino(nb_pento) ;
     new_array(array_file,pos_file,pento_array[i]->array_pent);
