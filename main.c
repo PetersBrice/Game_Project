@@ -108,14 +108,30 @@ int main(int argc, char** argv)
   int end = 0;
   FILE *file;
   char array_file [1000];
+  int array_end = 0;
   SDL_Surface *square_sprite;
   pentomino_ptr pentomino;
+  pentomino_ptr pento_array[20];
  
   square_sprite = NULL ;
   /* open the pentomino file */
   /* HERE test.txt NOT pentomino.txt*/
-  file = fopen("test.txt", "r");
+  file = fopen("pentomino.txt", "r");
   rewind(file);
+  array_end = file_array(array_file,file);
+  /* close the file */
+  fclose(file);
+/*
+for (int i=0; i<array_end; i++) {
+	printf("%c", array_file[i]);
+}
+return 0;
+*/
+
+//	printf("%d\n", begin_pent(array_file));
+//	printf("%d\n", nb_pent(array_file, array_end));
+  tab_pento (array_file,pento_array, array_end);
+
   /* draw the shape in the file */
   //draw_txt(file);
 
@@ -130,17 +146,15 @@ int main(int argc, char** argv)
 
   //pentomino = shape(10, 10, file);
   square_sprite = SDL_LoadBMP("smiley.bmp");
-  draw_pentomino(pentomino, square_sprite, background);
-  SDL_Flip(background);
+  /*draw_pentomino(pentomino, square_sprite, background);*/
+  draw_pentomino(pento_array[0], square_sprite, background);
+   SDL_Flip(background);
   
 
 
   area_ptr area = init_area();
   array_area(area,file);
   draw_area(area,background);
-
-  /* close the file */
-  fclose(file);
 
   /* controls keyboard and mouse */
   while (end!=1){
