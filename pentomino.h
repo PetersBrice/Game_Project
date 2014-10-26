@@ -52,11 +52,13 @@ bool test_pento(char array_file[1000], int array_end);
 int size_area(char array_file[1000]);
 
 /*transform the shape in a tab of square*/
-pentomino_ptr get_square(pentomino_ptr pentomino ,int pos_x,int pos_y);
+void get_square(square_ptr square[5],char array_pent[5][5] ,int pos_x,int pos_y);
 
 /*create a table of pentomino*/
 void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end);
 
 void get_area(char array_file[1000],char shape[10][10]);
+
+void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *square_sprite,SDL_Surface *background);
 
 #endif

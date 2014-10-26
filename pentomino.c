@@ -161,15 +161,6 @@ int file_array(char array_file[1000],FILE *file) {
     array_file[i] = (char)fgetc(file);
   }
   return i;
-/*
-  int i = 0;
-  char array_temp[100] = "";
-  while(fgets(array_temp,100,file) != NULL){
-    strcat(array_file,array_temp);
-    i++;
-  }
-  return i;
-*/
 }
 
 int begin_pent (char array_file[1000]){
@@ -208,7 +199,6 @@ int new_array(char array_file[1000],int pos_file,char array_pent[5][5]){
   i = 0;
   j = 0;
   while(Nb_square<5){
-    printf("pos_file = %d\n",pos_file);
     if (array_file[pos_file] =='\n'){
       i++;
       j = 0;
@@ -221,7 +211,7 @@ int new_array(char array_file[1000],int pos_file,char array_pent[5][5]){
     }
     pos_file++ ;
   }
-  return pos_file;
+  return pos_file+2;
 }
 
 bool test_pento(char array_file[1000], int array_end){
@@ -249,38 +239,50 @@ int size_area(char array_file[1000]){
   return area_size;
 }
 
-pentomino_ptr get_square(pentomino_ptr pentomino ,int pos_x,int pos_y){
+void get_square(square_ptr square[5] ,char array_pent[5][5],int pos_x,int pos_y){
   int i,j,nb_square;
   nb_square = 0;
   SDL_Rect rcSrc,rcSprite;
   while (nb_square<5){
     for(i = 0;i < 5;i++){
       for(j = 0;j < 5;j++){
-	if (pentomino->array_pent[i][j]){
-	  rcSrc.x = pos_x + i*SIZE_SQUARE;
-	  rcSrc.y = pos_y + (j-1)*SIZE_SQUARE;
+	if (array_pent[i][j] == '#'){
+	  printf("i %d j %d\n",i,j);
+	  rcSrc.x = pos_x + j*SIZE_SQUARE;
+	  printf("x %d\n",rcSrc.x);
+	  rcSrc.y = pos_y + i*SIZE_SQUARE;
 	  rcSprite.x = 0 ;
 	  rcSprite.y = 0 ;
 	  rcSprite.w = 30 ;
 	  rcSprite.h = 30 ;
-	  pentomino->square[nb_square]= new_square(rcSrc,rcSprite);
+	  square[nb_square]= new_square(rcSrc,rcSprite);
 	  nb_square++;
 	}
       }
     }
   }
-  return pentomino;
 }
 
 void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end){
-  int nb_pento,i,pos_file ;
+  int nb_pento,i,j,k,pos_file;
   nb_pento = nb_pent(array_file, array_end) ;
-  pos_file = begin_pent(array_file) ;
-  for(i = 0;i<nb_pento;i++){
+  pos_file = begin_pent(array_file);
+  for(i=0;i<nb_pento;i++){
     pento_array[i] = new_pentomino(nb_pento) ;
-    new_array(array_file,pos_file,pento_array[i]->array_pent);
-    pento_array[i] = get_square(pento_array[i],30,30);
+    pos_file = new_array(array_file,pos_file,pento_array[i]->array_pent);
+    /*for(j=0;j<5;j++){
+      for(k=0;k<5;k++){
+	printf("%c",pento_array[i]->array_pent[j][k]);
+      }
+      printf("\n");
+      }*/
+    get_square(pento_array[i]->square,pento_array[i]->array_pent,5,5+i*5*SIZE_SQUARE);
+    /*for(j=0;j<5;j++){
+      printf("x  %d \n",pento_array[i]->square[j]->rcSrc.x);
+      }*/
+    //printf("\n\n");
   }
+  printf("e\n");
 } 
     
     
@@ -311,4 +313,10 @@ void get_area(char array_file[1000],char shape[10][10]){
   }
 }
       
-  
+void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *square_sprite,SDL_Surface *background){
+  int i,nb_pento;
+  nb_pento = nb_pent(array_file,array_end);
+    for (i = 0;i<nb_pento;i++){
+      draw_pentomino(pento_array[i],square_sprite,background);
+    }
+}
