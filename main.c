@@ -12,8 +12,7 @@ int WIDTH = 800;
 int HEIGHT = 600;
 
 void initSDL(void);
-void draw_txt (FILE *file);
-int controls(void);
+int controls(struct pentomino ** pento_array,int *click,int * pos_mouse_x,int * pos_mouse_y);
 
 
 /* initialization of SDL */
@@ -33,114 +32,97 @@ void initSDL(void)
 
 /* controls */
 
-int controls (void)
+int controls (struct pentomino ** pento_array, int *click, int * pos_mouse_x, int * pos_mouse_y)
 {
   SDL_Event event;
-    SDL_WaitEvent(&event);
-    switch (event.type){
-      // click on the cross
+  int i;
+  SDL_WaitEvent(&event);
+  switch (event.type){
+    // click on the cross
     case SDL_QUIT:
       return 1;
       break;
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym){
-
+	//button A for the mirror
       case SDLK_a:
 	printf("A\n");
 	return 2;
 	break;
       }
       break;
-      // left click of the mouse
+      // press the left click of the mouse
+    case SDL_MOUSEBUTTONDOWN:
+      if (event.button.button == SDL_BUTTON_LEFT){
+	*click = 1;
+	*pos_mouse_x = event.button.x;
+	*pos_mouse_y = event.button.y;
+      }
+      break;
+      // loosen the left click of the mouse
     case SDL_MOUSEBUTTONUP:
       if (event.button.button == SDL_BUTTON_LEFT){
-	//position_mouse.x = event.button.x;
-	//position_mouse.y = event.button.y;
+	*click = 0;
       }
+      break;
     case SDL_MOUSEMOTION:
-      //position_square.x = event.motion.x;
-      //position_square.y = event.motion.y;
+      // if the mouse moves and the left click is pressed
+      if (*click == 1){
+	// move the pentomino
+	for (i=0;i<5;i++){ 
+	  pento_array[0]->square[i]->rcSrc.x = event.motion.x - pento_array[0]->square[i]->rcSrc.x;
+	  pento_array[0]->square[i]->rcSrc.y = event.motion.y - pento_array[0]->square[i]->rcSrc.y; 
+	}
+      }      
       break;
     }
-    SDL_Flip(background);
     return 0;
-}
-
-
-
-/* draw the shape in test.txt */
-void draw_txt (FILE *file)
-{
-  char line [20];
-  int i;
-  int size_square = 50;
-  SDL_Rect position_square;
-  SDL_Surface *square = NULL;
-  fgets(line, sizeof line, file);
-  position_square.x = 0;
-  position_square.y = 0;
-  while (line[0] != '\n' && line[0] != EOF){
-    i = 0;
-    while (line[i] != '\n'){
-      if (line[i] == '#'){
-	// load the square with the dimensions and the color
-	square = SDL_CreateRGBSurface(SDL_HWSURFACE, size_square, size_square, 32, 0, 0, 0, 0);
-	SDL_FillRect(square, NULL, SDL_MapRGB(background->format, 255, 255, 255));
-	// draw the square and update the screen
-	SDL_BlitSurface(square, NULL, background, &position_square);
-	SDL_Flip(background);
-	SDL_FreeSurface(square);
-      }
-      position_square.x = position_square.x + size_square;
-      i++;
-    }
-    position_square.x = 0;
-    position_square.y = position_square.y + size_square;
-    fgets(line, sizeof line, file);
-  }
 }
 
 /* main */
 int main(int argc, char** argv)
 {
   initSDL();
-  //SDL_Event event;
-  int end = 0;
+  int end,click = 0;
   FILE *file;
   char array_file [1000];
   int array_end = 0;
   SDL_Surface *square_sprite;
   pentomino_ptr pento_array[20];
- 
-  square_sprite = NULL ;
-  /* open the pentomino file */
-  /* HERE test.txt NOT pentomino.txt*/
+  int pos_mouse_x,pos_mouse_y=0;
+
+
+  /* open the pentomino file */  
   file = fopen("pentomino.txt", "r");
+  /* beginning of the file */
   rewind(file);
+  /* end of the file */
   array_end = file_array(array_file,file);
   /* close the file */
   fclose(file);
-  tab_pento (array_file,pento_array, array_end);
-  printf("END");
+
+  /* set the pentominos in an array */
+  tab_pento (array_file,pento_array,array_end);
+  /* load the sprite and draw the pentominos */
   square_sprite = SDL_LoadBMP("smiley.bmp");
   draw_array(pento_array,array_file,array_end,square_sprite,background);
   SDL_Flip(background);
   
-  
-
-
   /*area_ptr area = init_area();
   array_area(area,file);
   draw_area(area,background);*/
 
   /* controls keyboard and mouse */
   while (end!=1){
-    end=controls();
-    if (controls() == 2){
+    end=controls(pento_array,&click,&pos_mouse_x,&pos_mouse_y);
+    if (controls(pento_array,&click,&pos_mouse_x,&pos_mouse_y) == 2){
       //pentomino = mirror(pentomino);
       //draw_pentomino(pentomino, square_sprite, background);
       SDL_Flip(background);
     }
+    SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
+    draw_array(pento_array,array_file,array_end,square_sprite,background);
+    SDL_Flip(background);
   }
   return EXIT_SUCCESS;
 }
