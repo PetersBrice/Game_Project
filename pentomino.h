@@ -21,6 +21,7 @@ typedef struct pentomino
   square_ptr square[5];
   int set ;
   int coat;
+  SDL_Surface * square_sprite;
 } * pentomino_ptr;
 
 /*create a new pentomino*/

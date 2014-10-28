@@ -23,7 +23,6 @@ void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surfa
   int i ;
   for(i=0;i<5;i++){
     draw_square(pentomino->square[i],square_sprite,background);
-   
   }
 }
 

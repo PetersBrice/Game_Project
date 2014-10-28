@@ -12,9 +12,10 @@ int WIDTH = 800;
 int HEIGHT = 600;
 
 void initSDL(void);
-void controls(int nb_pento,int * end,struct pentomino ** pento_array,int *click,int * pos_mouse_x,int * pos_mouse_y);
-int choose (int nb_pento,struct pentomino ** pento_array,int pos_mouse_x, int pos_mouse_y);
-void update_coat (struct pentomino ** pento_array,int select,int nb_pento);
+void controls(int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],int array_end,SDL_Surface * square_sprite);
+void move (int selected,pentomino_ptr pento_array[20],int * pos_mouse_x,int * pos_mouse_y,char array_file [1000],int array_end,SDL_Surface * square_sprite,SDL_Event event);
+int select_pento (int nb_pento,struct pentomino ** pento_array,int pos_mouse_x, int pos_mouse_y);
+void update_coat (struct pentomino ** pento_array,int selected,int nb_pento);
 
 
 /* initialization of SDL */
@@ -25,19 +26,16 @@ void initSDL(void)
     exit(EXIT_FAILURE);
   }
   atexit(SDL_Quit);
-
   // load of the background
   background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
-
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
 
 /* controls */
-
-void controls (int nb_pento,int * end,struct pentomino ** pento_array, int *click, int * pos_mouse_x, int * pos_mouse_y)
+void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],int array_end,SDL_Surface * square_sprite)
 {
   SDL_Event event;
-  int i,select;
+  int i,selected;
   SDL_WaitEvent(&event);
   switch (event.type){
     // click on the cross
@@ -58,10 +56,10 @@ void controls (int nb_pento,int * end,struct pentomino ** pento_array, int *clic
 	*click = 1;
 	*pos_mouse_x = event.button.x;
 	*pos_mouse_y = event.button.y;
-	select = choose (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
+	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
 	// put the pentomino selected on the first coat
-	if (select != -1)
-	  update_coat(pento_array,select,nb_pento);
+	if (selected != -1)
+	  update_coat(pento_array,selected,nb_pento);
       }
       break;
       // loosen the left click of the mouse
@@ -73,26 +71,36 @@ void controls (int nb_pento,int * end,struct pentomino ** pento_array, int *clic
       // if the mouse moves and the left click is pressed
       if (*click == 1){
 	// select the pentomino
-	select = choose (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
+	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
 	// if click on a pentomino
-	if (select != -1){
+	if (selected != -1){
 	  // move the pentomino
-	  for (i=0;i<5;i++){ 
-	    pento_array[select]->square[i]->rcSrc.x = pento_array[select]->square[i]->rcSrc.x + event.motion.x - *pos_mouse_x;
-	    pento_array[select]->square[i]->rcSrc.y = pento_array[select]->square[i]->rcSrc.y + event.motion.y - *pos_mouse_y;
-	  }
-	  *pos_mouse_x=event.button.x;
-	  *pos_mouse_y=event.button.y;
+	  move (selected,pento_array,pos_mouse_x,pos_mouse_y,array_file,array_end,square_sprite,event);
 	}
       }      
       break;
     }
 }
 
-int choose (int nb_pento,struct pentomino ** pento_array, int pos_mouse_x, int pos_mouse_y)
+/* move the pentomino selected */
+void move (int selected,pentomino_ptr pento_array[20],int * pos_mouse_x,int * pos_mouse_y,char array_file [1000],int array_end,SDL_Surface * square_sprite,SDL_Event event)
+{
+  int i;
+  for (i=0;i<5;i++){
+    pento_array[selected]->square[i]->rcSrc.x = pento_array[selected]->square[i]->rcSrc.x + event.motion.x - *pos_mouse_x;
+    pento_array[selected]->square[i]->rcSrc.y = pento_array[selected]->square[i]->rcSrc.y + event.motion.y - *pos_mouse_y;
+  }
+  *pos_mouse_x=event.button.x;
+  *pos_mouse_y=event.button.y;
+  SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
+  draw_array(pento_array,array_file,array_end,square_sprite,background);
+  SDL_Flip(background);
+}
+
+int select_pento (int nb_pento,struct pentomino ** pento_array, int pos_mouse_x, int pos_mouse_y)
 {
   int i,j;
-  int choose = -1;
+  int selected = -1;
   int coat = 0;
   // verification for all the pentominos
   for (i=0;i<nb_pento;i++){
@@ -103,19 +111,19 @@ int choose (int nb_pento,struct pentomino ** pento_array, int pos_mouse_x, int p
 	  // choose the pentomino on the first coat
 	  if (pento_array[i]->coat >= coat){
 	    coat = pento_array[i]->coat;
-	    choose = i;
+	    selected = i;
 	  }
 	}
     }
   }
-  return choose;
+  return selected;
 }
 
-void update_coat (struct pentomino ** pento_array,int select,int nb_pento)
+void update_coat (struct pentomino ** pento_array,int selected,int nb_pento)
 {
   int i;
-  pentomino_ptr save_pento = pento_array[select];
-  for (i=select+1;i<nb_pento;i++){
+  pentomino_ptr save_pento = pento_array[selected];
+  for (i=selected+1;i<nb_pento;i++){
     pento_array[i-1] = pento_array[i];
   }
   pento_array[nb_pento-1] = save_pento;
@@ -159,10 +167,7 @@ int main(int argc, char** argv)
 
   /* controls keyboard and mouse */
   while (end!=1){
-    controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y);
-    SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-    draw_array(pento_array,array_file,array_end,square_sprite,background);
-    SDL_Flip(background);
+    controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,array_end,square_sprite);
   }
   return EXIT_SUCCESS;
 }
