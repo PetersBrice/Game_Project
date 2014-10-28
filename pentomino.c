@@ -18,11 +18,11 @@ pentomino_ptr new_pentomino(int position)
   return new_pent;
 }
 
-void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surface *background)
+void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *background)
 {
   int i ;
   for(i=0;i<5;i++){
-    draw_square(pentomino->square[i],square_sprite,background);
+    draw_square(pentomino->square[i],pentomino->square_sprite,background);
   }
 }
 
@@ -115,7 +115,6 @@ bool test_pento(char array_file[1000], int array_end){
   int area = size_area(array_file);
   int nb_pento = nb_pent(array_file, array_end);
   return area % nb_pento == 0;
-
 }
 
 /*maybe move it to area.c*/
@@ -158,14 +157,20 @@ void get_square(square_ptr square[5] ,char array_pent[5][5],int pos_x,int pos_y)
   }
 }
 
-void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end){
-  int nb_pento,i,j,k,pos_file;
+void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[12]){
+  int nb_pento,i,pos_file;
+  int j = 0;
   nb_pento = nb_pent(array_file, array_end) ;
   pos_file = begin_pent(array_file);
   for(i=0;i<nb_pento;i++){
     pento_array[i] = new_pentomino(nb_pento) ;
     pos_file = new_array(array_file,pos_file,pento_array[i]->array_pent);
     get_square(pento_array[i]->square,pento_array[i]->array_pent,5,5+i*5*SIZE_SQUARE);
+    if(j == 12){
+      j = 0;
+    }
+    pento_array[i]->square_sprite = array_color[j];
+    j++;
   }
 } 
      
@@ -196,11 +201,11 @@ void get_area(char array_file[1000],char shape[10][10]){
   }
 }
       
-void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *square_sprite,SDL_Surface *background){
+void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *background){
   int i,nb_pento;
   nb_pento = nb_pent(array_file,array_end);
     for (i = 0;i<nb_pento;i++){
       pento_array[i]->coat = i;
-      draw_pentomino(pento_array[i],square_sprite,background);
+      draw_pentomino(pento_array[i],background);
     }
 }
