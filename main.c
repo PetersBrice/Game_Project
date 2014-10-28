@@ -12,7 +12,7 @@ int WIDTH = 800;
 int HEIGHT = 600;
 
 void initSDL(void);
-int controls(struct pentomino ** pento_array,int *click,int * pos_mouse_x,int * pos_mouse_y);
+void controls(int * end,struct pentomino ** pento_array,int *click,int * pos_mouse_x,int * pos_mouse_y);
 
 
 /* initialization of SDL */
@@ -32,7 +32,7 @@ void initSDL(void)
 
 /* controls */
 
-int controls (struct pentomino ** pento_array, int *click, int * pos_mouse_x, int * pos_mouse_y)
+void controls (int * end,struct pentomino ** pento_array, int *click, int * pos_mouse_x, int * pos_mouse_y)
 {
   SDL_Event event;
   int i;
@@ -40,14 +40,13 @@ int controls (struct pentomino ** pento_array, int *click, int * pos_mouse_x, in
   switch (event.type){
     // click on the cross
     case SDL_QUIT:
-      return 1;
+      *end = 1;
       break;
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym){
 	//button A for the mirror
       case SDLK_a:
 	printf("A\n");
-	return 2;
 	break;
       }
       break;
@@ -70,13 +69,14 @@ int controls (struct pentomino ** pento_array, int *click, int * pos_mouse_x, in
       if (*click == 1){
 	// move the pentomino
 	for (i=0;i<5;i++){ 
-	  pento_array[0]->square[i]->rcSrc.x = event.motion.x - pento_array[0]->square[i]->rcSrc.x;
-	  pento_array[0]->square[i]->rcSrc.y = event.motion.y - pento_array[0]->square[i]->rcSrc.y; 
+	  pento_array[0]->square[i]->rcSrc.x = pento_array[0]->square[i]->rcSrc.x + event.motion.x - *pos_mouse_x;
+	  pento_array[0]->square[i]->rcSrc.y = pento_array[0]->square[i]->rcSrc.y + event.motion.y - *pos_mouse_y; 
 	}
+	*pos_mouse_x=event.button.x;
+	*pos_mouse_y=event.button.y;
       }      
       break;
     }
-    return 0;
 }
 
 /* main */
@@ -114,15 +114,10 @@ int main(int argc, char** argv)
 
   /* controls keyboard and mouse */
   while (end!=1){
-    end=controls(pento_array,&click,&pos_mouse_x,&pos_mouse_y);
-    if (controls(pento_array,&click,&pos_mouse_x,&pos_mouse_y) == 2){
-      //pentomino = mirror(pentomino);
-      //draw_pentomino(pentomino, square_sprite, background);
-      SDL_Flip(background);
-    }
-    SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-    draw_array(pento_array,array_file,array_end,square_sprite,background);
-    SDL_Flip(background);
+    controls(&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y);
+	SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
+	draw_array(pento_array,array_file,array_end,square_sprite,background);
+	SDL_Flip(background);
   }
   return EXIT_SUCCESS;
 }
