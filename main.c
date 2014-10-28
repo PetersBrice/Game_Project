@@ -12,7 +12,9 @@ int WIDTH = 800;
 int HEIGHT = 600;
 
 void initSDL(void);
-void controls(int * end,struct pentomino ** pento_array,int *click,int * pos_mouse_x,int * pos_mouse_y);
+void controls(int nb_pento,int * end,struct pentomino ** pento_array,int *click,int * pos_mouse_x,int * pos_mouse_y);
+int choose (int nb_pento,struct pentomino ** pento_array,int pos_mouse_x, int pos_mouse_y);
+void update_coat (struct pentomino ** pento_array,int select,int nb_pento);
 
 
 /* initialization of SDL */
@@ -32,10 +34,10 @@ void initSDL(void)
 
 /* controls */
 
-void controls (int * end,struct pentomino ** pento_array, int *click, int * pos_mouse_x, int * pos_mouse_y)
+void controls (int nb_pento,int * end,struct pentomino ** pento_array, int *click, int * pos_mouse_x, int * pos_mouse_y)
 {
   SDL_Event event;
-  int i;
+  int i,select;
   SDL_WaitEvent(&event);
   switch (event.type){
     // click on the cross
@@ -56,34 +58,74 @@ void controls (int * end,struct pentomino ** pento_array, int *click, int * pos_
 	*click = 1;
 	*pos_mouse_x = event.button.x;
 	*pos_mouse_y = event.button.y;
+	select = choose (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
+	// put the pentomino selected on the first coat
+	if (select != -1)
+	  update_coat(pento_array,select,nb_pento);
       }
       break;
       // loosen the left click of the mouse
     case SDL_MOUSEBUTTONUP:
-      if (event.button.button == SDL_BUTTON_LEFT){
+      if (event.button.button == SDL_BUTTON_LEFT)
 	*click = 0;
-      }
       break;
     case SDL_MOUSEMOTION:
       // if the mouse moves and the left click is pressed
       if (*click == 1){
-	// move the pentomino
-	for (i=0;i<5;i++){ 
-	  pento_array[0]->square[i]->rcSrc.x = pento_array[0]->square[i]->rcSrc.x + event.motion.x - *pos_mouse_x;
-	  pento_array[0]->square[i]->rcSrc.y = pento_array[0]->square[i]->rcSrc.y + event.motion.y - *pos_mouse_y; 
+	// select the pentomino
+	select = choose (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
+	// if click on a pentomino
+	if (select != -1){
+	  // move the pentomino
+	  for (i=0;i<5;i++){ 
+	    pento_array[select]->square[i]->rcSrc.x = pento_array[select]->square[i]->rcSrc.x + event.motion.x - *pos_mouse_x;
+	    pento_array[select]->square[i]->rcSrc.y = pento_array[select]->square[i]->rcSrc.y + event.motion.y - *pos_mouse_y;
+	  }
+	  *pos_mouse_x=event.button.x;
+	  *pos_mouse_y=event.button.y;
 	}
-	*pos_mouse_x=event.button.x;
-	*pos_mouse_y=event.button.y;
       }      
       break;
     }
+}
+
+int choose (int nb_pento,struct pentomino ** pento_array, int pos_mouse_x, int pos_mouse_y)
+{
+  int i,j;
+  int choose = -1;
+  int coat = 0;
+  // verification for all the pentominos
+  for (i=0;i<nb_pento;i++){
+    // verification for all the squares of the pentominos
+    for (j=0;j<5;j++){
+      // if collide
+      if (pos_mouse_x > pento_array[i]->square[j]->rcSrc.x && pos_mouse_x < pento_array[i]->square[j]->rcSrc.x + 30 && pos_mouse_y > pento_array[i]->square[j]->rcSrc.y && pos_mouse_y < pento_array[i]->square[j]->rcSrc.y + 30){
+	  // choose the pentomino on the first coat
+	  if (pento_array[i]->coat >= coat){
+	    coat = pento_array[i]->coat;
+	    choose = i;
+	  }
+	}
+    }
+  }
+  return choose;
+}
+
+void update_coat (struct pentomino ** pento_array,int select,int nb_pento)
+{
+  int i;
+  pentomino_ptr save_pento = pento_array[select];
+  for (i=select+1;i<nb_pento;i++){
+    pento_array[i-1] = pento_array[i];
+  }
+  pento_array[nb_pento-1] = save_pento;
 }
 
 /* main */
 int main(int argc, char** argv)
 {
   initSDL();
-  int end,click = 0;
+  int end,click,nb_pento = 0;
   FILE *file;
   char array_file [1000];
   int array_end = 0;
@@ -101,6 +143,9 @@ int main(int argc, char** argv)
   /* close the file */
   fclose(file);
 
+  /* say the number of pentominos */
+  nb_pento = nb_pent(array_file,array_end);
+
   /* set the pentominos in an array */
   tab_pento (array_file,pento_array,array_end);
   /* load the sprite and draw the pentominos */
@@ -114,10 +159,10 @@ int main(int argc, char** argv)
 
   /* controls keyboard and mouse */
   while (end!=1){
-    controls(&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y);
-	SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-	draw_array(pento_array,array_file,array_end,square_sprite,background);
-	SDL_Flip(background);
+    controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y);
+    SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
+    draw_array(pento_array,array_file,array_end,square_sprite,background);
+    SDL_Flip(background);
   }
   return EXIT_SUCCESS;
 }

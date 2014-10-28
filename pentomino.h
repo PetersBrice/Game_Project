@@ -20,6 +20,7 @@ typedef struct pentomino
   int position;
   square_ptr square[5];
   int set ;
+  int coat;
 } * pentomino_ptr;
 
 /*create a new pentomino*/

@@ -201,6 +201,7 @@ void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_en
   int i,nb_pento;
   nb_pento = nb_pent(array_file,array_end);
     for (i = 0;i<nb_pento;i++){
+      pento_array[i]->coat = i;
       draw_pentomino(pento_array[i],square_sprite,background);
     }
 }
