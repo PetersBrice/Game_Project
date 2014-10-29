@@ -29,30 +29,52 @@ void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *square_sprite,SDL_Surfa
 }
 
 
-pentomino_ptr mirror(pentomino_ptr pentomino){
-  int i;
+void mirror(pentomino_ptr pentomino){
+  int i,j,max_col;
+  max_col = 0;
   int min = 2000;
   int max = 0;
+  char new_shape[5][5];
   for (i = 0;i < 5;i++){
+    for (j = 0;j < 5;j++){
+      if (pentomino->array_pent[i][j] == '#' && max_col < j){
+	max_col = j ;
+      }
+    }
     if (pentomino->square[i]->rcSrc.x<min){
       min = pentomino->square[i]->rcSrc.x;
+    }
+    if (pentomino->square[i]->rcSrc.x>max){
+      max = pentomino->square[i]->rcSrc.x;
+    }
+  }
+  for (i = 0;i < 5;i++){
+    for (j = 0;j <= max_col;j++){
+      new_shape[i][j]=pentomino->array_pent[i][max-j];
+    }
+  }
+  for (i = 0;i < 5;i++){
+    for (j = 0;j < 5;j++){
+      pentomino->array_pent[i][j] = new_shape[i][j];
     }
   }
   for (i = 0;i < 5;i++){
     if (pentomino->square[i]->rcSrc.x == min){
-      pentomino->square[i]->rcSrc.x = pentomino->square[i]->rcSrc.x + SIZE_SQUARE *4;
-    }
-    if (pentomino->square[i]->rcSrc.x == min + SIZE_SQUARE){
-      pentomino->square[i]->rcSrc.x = pentomino->square[i]->rcSrc.x + SIZE_SQUARE * 2;
-    }
-    if (pentomino->square[i]->rcSrc.x == min + 3 * SIZE_SQUARE){
-      pentomino->square[i]->rcSrc.x = pentomino->square[i]->rcSrc.x - SIZE_SQUARE * 2; 
-    }
-    if (pentomino->square[i]->rcSrc.x == min + 4 * SIZE_SQUARE){
-      pentomino->square[i]->rcSrc.x = pentomino->square[i]->rcSrc.x - SIZE_SQUARE * 4; 
+      pentomino->square[i]->rcSrc.x = max;
+    }else if (pentomino->square[i]->rcSrc.x == min + SIZE_SQUARE){
+      pentomino->square[i]->rcSrc.x = max-SIZE_SQUARE;
+    } else if (pentomino->square[i]->rcSrc.x == min + 2*SIZE_SQUARE){
+      pentomino->square[i]->rcSrc.x = max-2*SIZE_SQUARE;
+    }else if (pentomino->square[i]->rcSrc.x == min + 3 * SIZE_SQUARE){
+      if (pentomino->square[i]->rcSrc.x == max){
+	pentomino->square[i]->rcSrc.x = min; 
+      }else{  
+	pentomino->square[i]->rcSrc.x = min +SIZE_SQUARE;
+      }
+    }else if (pentomino->square[i]->rcSrc.x == max){
+      pentomino->square[i]->rcSrc.x = min; 
     }      
   }
-  return pentomino;
 }
 
 pentomino_ptr create(int x, int y, FILE *file){
@@ -221,8 +243,6 @@ bool test_pento(char array_file[1000], int array_end){
 
 }
 
-/*maybe move it to area.c*/
-
 int size_area(char array_file[1000]){
   bool end = false;
   int area_size,i;
@@ -247,9 +267,9 @@ void get_square(square_ptr square[5] ,char array_pent[5][5],int pos_x,int pos_y)
     for(i = 0;i < 5;i++){
       for(j = 0;j < 5;j++){
 	if (array_pent[i][j] == '#'){
-	  printf("i %d j %d\n",i,j);
+	  // printf("i %d j %d\n",i,j);
 	  rcSrc.x = pos_x + j*SIZE_SQUARE;
-	  printf("x %d\n",rcSrc.x);
+	  //printf("x %d\n",rcSrc.x);
 	  rcSrc.y = pos_y + i*SIZE_SQUARE;
 	  rcSprite.x = 0 ;
 	  rcSprite.y = 0 ;
@@ -282,36 +302,8 @@ void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_e
       }*/
     //printf("\n\n");
   }
-  printf("e\n");
+  //printf("e\n");
 } 
-    
-    
-void get_area(char array_file[1000],char shape[10][10]){
-  int size,i,j,nb_square,pos_file;
-  nb_square=0;
-  size = size_area(array_file);
-  for(i = 0;i<10;i++){
-    for(j = 0;j<10;j++){
-      shape[i][j] = 'o';
-    }
-  }
-  i = 0;
-  j = 0;
-  pos_file = 0;
-  while(nb_square<size){
-    if (array_file[pos_file] == '#'){
-      shape[i][j] = '#';
-      i++;
-      nb_square++;
-    }else if(array_file[pos_file] == ' '){
-      i++;
-    }else{
-      i = 0;
-      j++;
-    }
-    pos_file++;
-  }
-}
       
 void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *square_sprite,SDL_Surface *background){
   int i,nb_pento;
@@ -319,4 +311,33 @@ void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_en
     for (i = 0;i<nb_pento;i++){
       draw_pentomino(pento_array[i],square_sprite,background);
     }
+}
+
+void turn_pent(pentomino_ptr pentomino){
+  int i,j,temp_x,temp_y,nb_square;
+  char temp[5][5];
+  nb_square = 0;
+  temp_x = pentomino->square[0]->rcSrc.x;
+  temp_y = pentomino->square[0]->rcSrc.y;
+  for(i = 0;i < 5;i++){
+    for(j = 0;j < 5;j++){
+      temp[i][j] = pentomino->array_pent[j][4-i];
+    }
+  }
+  for(i = 0;i < 5;i++){
+    for(j = 0;j < 5;j++){
+      pentomino->array_pent[i][j] = temp[i][j];
+    }
+  }
+  while(nb_square<5){
+    for(i = 0;i<5;i++){
+      for(j = 0;j<5;j++){
+	if(pentomino->array_pent[i][j] == '#'){
+	  pentomino->square[nb_square]->rcSrc.x =  j*SIZE_SQUARE+temp_x;
+	  pentomino->square[nb_square]->rcSrc.y = i*SIZE_SQUARE +temp_y;
+	  nb_square++;
+	}
+      }
+    }
+  }
 }

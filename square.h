@@ -3,12 +3,14 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
 #include<SDL.h>
 
 typedef struct square
 {
   SDL_Rect rcSrc ;
   SDL_Rect rcSprite;
+  bool set;
 } * square_ptr ;
 
 square_ptr new_square(SDL_Rect rcSrc, SDL_Rect rcSprite);

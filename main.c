@@ -107,11 +107,12 @@ int main(int argc, char** argv)
   //SDL_Event event;
   int end = 0;
   FILE *file;
+  int i,j;
   char array_file [1000];
   int array_end = 0;
   SDL_Surface *square_sprite;
   pentomino_ptr pento_array[20];
- 
+  area_ptr area = NULL; 
   square_sprite = NULL ;
   /* open the pentomino file */
   /* HERE test.txt NOT pentomino.txt*/
@@ -121,11 +122,23 @@ int main(int argc, char** argv)
   /* close the file */
   fclose(file);
   tab_pento (array_file,pento_array, array_end);
-  printf("END");
+  area = init_area(array_file,0,0);
+  //printf("END\n");
   square_sprite = SDL_LoadBMP("smiley.bmp");
+  printf("x %d \n",pento_array[2]->square[0]->rcSrc.x);
+  /*mirror(pento_array[0]);
+  mirror(pento_array[1]);
+  mirror(pento_array[2]);
+  mirror(pento_array[3]);
+  turn_pent(pento_array[0]);
+  turn_pent(pento_array[1]);
+  turn_pent(pento_array[2]);
+  turn_pent(pento_array[3]);*/
+  printf("x %d \n",pento_array[2]->square[0]->rcSrc.x);
   draw_array(pento_array,array_file,array_end,square_sprite,background);
+  //draw_area (array_file,area,square_sprite,background);
   SDL_Flip(background);
-  
+
   
 
 
