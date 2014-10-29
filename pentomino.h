@@ -63,4 +63,7 @@ void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_e
 void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *background);
 
 void turn_pent(pentomino_ptr pentomino);
+
+void free_pento(pentomino_ptr pentomino);
+
 #endif

@@ -234,3 +234,9 @@ void turn_pent(pentomino_ptr pentomino){
     }
   }
 }
+
+void free_pento (pentomino_ptr pentomino)
+{
+  free(pentomino->square_sprite);
+  free(pentomino);
+}
