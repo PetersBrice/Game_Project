@@ -1,55 +1,72 @@
 #include "area.h"
+#define SIZE_SQUARE 30 
 
-area_ptr init_area (void)
+area_ptr init_area (char array_file[1000],int pos_x,int pos_y)
 {
   area_ptr area = (area_ptr) malloc (sizeof(struct area));
-  area->pos_area.x = 0;
-  area->pos_area.y = 0;
-  area->nb_pent = 0;
+  get_area(array_file,area->shape);
+  get_square_area(array_file,area->shape,area->square,pos_x,pos_y);
   return area;
 }
 
-// return the array for the shape of the area
-void array_area (area_ptr area, FILE *file)
+
+
+void draw_area(char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *background)
 {
-  area->array_area[MAXW][MAXH];
-  memset(*area->array_area,0,sizeof(area->array_area));
-  char line [MAXW];
-  line[0] = 2;
-  int col,row = 0;
-  rewind(file);
-  while(line[0] != '\n' && row<MAXH){
-    fgets(line, sizeof line, file);
-    col = 0;
-    while(line[col] != '\n'){
-      if(line[col] == '#'){
-	area->array_area[col][row] = 1;
-	printf("tab 1 ; col=%d ; row=%d\n",col,row);
-      }
-      col++;
-    }
-    row++;    
+  int i,size ;
+  size = size_area(array_file);
+  for(i=0;i<size;i++){
+    draw_square(area->square[i],square_sprite,background);
+   
   }
 }
 
-void draw_area (area_ptr area,SDL_Surface *background)
-{
-  int col,row = 0;
-  int size_square = 30;
-  SDL_Rect pos_square;
-  pos_square.x = area->pos_area.x;
-  pos_square.y = area->pos_area.y;
-  SDL_Surface *square = SDL_CreateRGBSurface(SDL_HWSURFACE,size_square,size_square,32,0,0,0,0);
-  SDL_FillRect(square,NULL,SDL_MapRGB(background->format,255,255,255));
-  for(row=0;row<MAXH;row++){
-    for(col=0;col<MAXW;col++){
-      if(area->array_area[col][row] == 1){
-	pos_square.x = area->pos_area.x + col * size_square;
-	pos_square.y = area->pos_area.y + row * size_square;
-        SDL_BlitSurface(square,NULL,background,&pos_square);
+void get_area(char array_file[1000],char shape[15][15]){
+  int size,i,j,nb_square,pos_file;
+  nb_square=0;
+  size = size_area(array_file);
+  for(i = 0;i<15;i++){
+    for(j = 0;j<15;j++){
+      shape[i][j] = 'o';
+    }
+  }
+  i = 0;
+  j = 0;
+  pos_file = 0;
+  while(nb_square<size){
+    if (array_file[pos_file] == '#'){
+      shape[i][j] = '#';
+      j++;
+      nb_square++;
+    }else if(array_file[pos_file] == ' '){
+      j++;
+    }else{
+      j = 0;
+      i++;
+    }
+    pos_file++;
+  }
+}
+
+void get_square_area(char array_file[1000],char array_area[15][15],square_ptr square[225],int pos_x,int pos_y){
+  int i,j,nb_square,size;
+  nb_square = 0;
+  size = size_area(array_file);
+  SDL_Rect rcSrc,rcSprite;
+  while (nb_square<size){
+    for(i = 0;i < 15;i++){
+      for(j = 0;j < 15;j++){
+	if (array_area[i][j] == '#'){
+	  rcSrc.x = pos_x + j*SIZE_SQUARE;
+	  rcSrc.y = pos_y + i*SIZE_SQUARE;
+	  rcSprite.x = 0 ;
+	  rcSprite.y = 0 ;
+	  rcSprite.w = 30 ;
+	  rcSprite.h = 30 ;
+	  square[nb_square]= new_square(rcSrc,rcSprite);
+	  nb_square++;
+	}
       }
     }
   }
-  SDL_Flip(background);
-  SDL_FreeSurface(square);
 }
