@@ -62,6 +62,10 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
       selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
       if(selected != -1){
 	auto_set(array_file,pento_array[selected],area);
+	SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
+	draw_area (array_file,area,square_sprite,background);
+	draw_array(pento_array,array_file,array_end,background);
+	SDL_Flip(background);
       }
       break;
     case SDL_MOUSEMOTION:
