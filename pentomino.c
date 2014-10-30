@@ -35,6 +35,7 @@ void mirror(pentomino_ptr pentomino){
   char new_shape[5][5];
   for (i = 0;i < 5;i++){
     for (j = 0;j < 5;j++){
+      new_shape[i][j] = 'o';
       if (pentomino->array_pent[i][j] == '#' && max_col < j){
 	max_col = j ;
       }
@@ -46,9 +47,11 @@ void mirror(pentomino_ptr pentomino){
       max = pentomino->square[i]->rcSrc.x;
     }
   }
+  printf("%d\n",max_col);
+  //ok
   for (i = 0;i < 5;i++){
     for (j = 0;j <= max_col;j++){
-      new_shape[i][j]=pentomino->array_pent[i][max-j];
+      new_shape[i][j]=pentomino->array_pent[i][max_col-j];
     }
   }
   for (i = 0;i < 5;i++){
@@ -233,6 +236,13 @@ void turn_pent(pentomino_ptr pentomino){
       }
     }
   }
+  for(i = 0;i<5;i++){
+    for(j = 0;j<5;j++){
+      printf("%c",pentomino->array_pent[i][j]);
+    }
+    printf("\n");
+  }
+  printf("\n");
 }
 
 void free_pento (pentomino_ptr pentomino)

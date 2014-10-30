@@ -70,3 +70,98 @@ void get_square_area(char array_file[1000],char array_area[15][15],square_ptr sq
     }
   }
 }
+
+int max_x_area(area_ptr area,char array_file[1000]){
+  int i,max,size;
+  max = 0;
+  size = size_area(array_file);
+  for(i = 0;i < size;i++){
+    if(area->square[i]->rcSrc.x>max){
+      max = area->square[i]->rcSrc.x;
+    }
+  }
+  return max + SIZE_SQUARE;
+}
+
+int max_y_area(area_ptr area,char array_file[1000]){
+  int i,max,size;
+  max = 0;
+  size = size_area(array_file);
+  for(i = 0;i < size;i++){
+    if(area->square[i]->rcSrc.y>max){
+      max = area->square[i]->rcSrc.y;
+    }
+  }
+  return max + SIZE_SQUARE;
+}
+
+int min_x_area(area_ptr area,char array_file[1000]){
+  int i,min,size;
+  min = max_x_area(area,array_file);
+  size = size_area(array_file);
+  for(i = 0;i < size;i++){
+    if(area->square[i]->rcSrc.x<min){
+      min = area->square[i]->rcSrc.x;
+    }
+  }
+  return min;
+}
+
+int min_y_area(area_ptr area,char array_file[1000]){
+  int i,min,size;
+  min = max_y_area(area,array_file);
+  size = size_area(array_file);
+  for(i = 0;i < size;i++){
+    if(area->square[i]->rcSrc.y<min){
+      min = area->square[i]->rcSrc.y;
+    }
+  }
+  return min;
+}
+
+void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area){
+  int i,j,min_x,min_y,max_x,max_y,min_next_x,min_next_y,next_x,next_y,size;
+  size = size_area(array_file);
+  min_next_x = SIZE_SQUARE;
+  min_next_y = SIZE_SQUARE;
+  min_x = min_x_area(area,array_file);
+  printf("%d\n",min_x);
+  min_y = min_y_area(area,array_file);
+  printf("%d\n",min_y);
+  max_x = max_x_area(area,array_file);
+  printf("%d\n",max_x);
+  max_y = max_y_area(area,array_file);
+  printf("%d\n",max_y);
+  bool in_area = true;
+  for(i = 0;i < 5;i++){
+    if ((pentomino->square[i]->rcSrc.x >= max_x) && (pentomino->square[i]->rcSrc.y >= max_y) && (pentomino->square[i]->rcSrc.x <= min_x) && (pentomino->square[i]->rcSrc.y <= min_y)){
+      in_area = false;
+    }
+  }
+  if (in_area){
+    for(i = 0;i < 5;i++){
+      for(j = 0;j < size ;j++){
+	if(fabs(pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x)<min_next_x){
+	  min_next_x = fabs(pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x);
+	  next_x = area->square[j]->rcSrc.x;
+	}
+	if(fabs(pentomino->square[i]->rcSrc.y-area->square[j]->rcSrc.y)<min_next_y){
+	  min_next_y = fabs(pentomino->square[i]->rcSrc.y-area->square[j]->rcSrc.y);
+	  next_y = area->square[j]->rcSrc.y;
+	}
+      }
+    }
+    for (i = 0;i<5;i++){
+      pentomino->square[i]->rcSrc.y = next_y;
+      pentomino->square[i]->rcSrc.x = next_x;
+    }
+  }
+}
+
+void auto_set_array(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end){
+  int i,nb_pento;
+  nb_pento = nb_pent(array_file,array_end);
+  for(i = 0;i < nb_pento;i++){
+    auto_set(array_file,pento_array[i],area);
+  }
+}

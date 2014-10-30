@@ -59,6 +59,10 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
     case SDL_MOUSEBUTTONUP:
       if (event.button.button == SDL_BUTTON_LEFT)
 	*click = 0;
+      selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
+      if(selected != -1){
+	auto_set(array_file,pento_array[selected],area);
+      }
       break;
     case SDL_MOUSEMOTION:
       // if the mouse moves and the left click is pressed

@@ -20,4 +20,16 @@ void draw_area (char array_file[1000],area_ptr area,SDL_Surface *square_sprite,S
 void get_area(char array_file[1000],char shape[15][15]);
 
 void get_square_area(char array_file[1000],char array_area[15][15],square_ptr square[225],int pos_x,int pos_y);
+
+int max_x_area(area_ptr area,char array_file[1000]);
+
+int max_y_area(area_ptr area,char array_file[1000]);
+
+int min_x_area(area_ptr area,char array_file[1000]);
+
+int min_y_area(area_ptr area,char array_file[1000]);
+
+void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area);
+
+void auto_set_array(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end);
 #endif
