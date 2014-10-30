@@ -213,7 +213,10 @@ int main(int argc, char** argv)
   /* controls keyboard and mouse */
   while (end!=1){
     controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,array_end,area,square_sprite);
-    
+    if (final_test(array_file,pento_array,area,array_end)==true){
+      printf("go\n");
+      end = 1;
+    }
   }
   return EXIT_SUCCESS;
 }

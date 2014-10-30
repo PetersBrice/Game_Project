@@ -125,43 +125,60 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area){
   min_next_x = SIZE_SQUARE;
   min_next_y = SIZE_SQUARE;
   min_x = min_x_area(area,array_file);
-  printf("%d\n",min_x);
   min_y = min_y_area(area,array_file);
-  printf("%d\n",min_y);
   max_x = max_x_area(area,array_file);
-  printf("%d\n",max_x);
   max_y = max_y_area(area,array_file);
-  printf("%d\n",max_y);
   bool in_area = true;
   for(i = 0;i < 5;i++){
-    if ((pentomino->square[i]->rcSrc.x >= max_x) && (pentomino->square[i]->rcSrc.y >= max_y) && (pentomino->square[i]->rcSrc.x <= min_x) && (pentomino->square[i]->rcSrc.y <= min_y)){
+    if ((pentomino->square[i]->rcSrc.x >= max_x) || (pentomino->square[i]->rcSrc.y >= max_y) || (pentomino->square[i]->rcSrc.x <= min_x) || (pentomino->square[i]->rcSrc.y <= min_y)){
       in_area = false;
+      printf("dedan\n");
     }
   }
-  if (in_area){
+  if (in_area == true){
+    printf("dehors\n");
     for(i = 0;i < 5;i++){
       for(j = 0;j < size ;j++){
 	if(fabs(pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x)<min_next_x){
 	  min_next_x = fabs(pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x);
-	  next_x = area->square[j]->rcSrc.x;
+	  next_x = pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x;
 	}
 	if(fabs(pentomino->square[i]->rcSrc.y-area->square[j]->rcSrc.y)<min_next_y){
 	  min_next_y = fabs(pentomino->square[i]->rcSrc.y-area->square[j]->rcSrc.y);
-	  next_y = area->square[j]->rcSrc.y;
+	  next_y = pentomino->square[i]->rcSrc.y-area->square[j]->rcSrc.y;
 	}
       }
     }
+    printf("next_x %d\n",next_x);
+    printf("pos_x %d\n",pentomino->square[0]->rcSrc.x);
     for (i = 0;i<5;i++){
-      pentomino->square[i]->rcSrc.y = next_y;
-      pentomino->square[i]->rcSrc.x = next_x;
+      pentomino->square[i]->rcSrc.y = -next_y+pentomino->square[i]->rcSrc.y;
+      pentomino->square[i]->rcSrc.x = -next_x+pentomino->square[i]->rcSrc.x;
     }
   }
 }
 
-void auto_set_array(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end){
-  int i,nb_pento;
+bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end){
+  bool end = true;
+  int i,j,size,nb_square,nb_pento;
+  size = size_area(array_file);
   nb_pento = nb_pent(array_file,array_end);
-  for(i = 0;i < nb_pento;i++){
-    auto_set(array_file,pento_array[i],area);
+  for(i = 0;i< size;i++){
+    area->square[i]->set = false;
   }
+  for(i = 0;i < size;i++){
+    for(j = 0;j < nb_pento;j++){
+      for(nb_square = 0;nb_square<5;nb_square++){
+	if((area->square[i]->rcSrc.x == pento_array[j]->square[nb_square]->rcSrc.x) && (area->square[i]->rcSrc.y == pento_array[j]->square[nb_square]->rcSrc.y)){
+	  area->square[i]-> set = true;
+	}
+      }
+    }
+  }
+  for(i = 0;i < size;i++){
+    if(area->square[i]->set == false){
+      end = false;
+    }
+  }
+  return end;
 }

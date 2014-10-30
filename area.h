@@ -31,5 +31,7 @@ int min_y_area(area_ptr area,char array_file[1000]);
 
 void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area);
 
-void auto_set_array(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end);
+bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end);
+
+
 #endif
