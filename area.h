@@ -1,7 +1,8 @@
 #ifndef AREA_H
 #define AREA_H
 
-#include "pentomino.h"
+#include "square.h"
+#include "file.h"
 
 #define MAXW 30  // max width for the area
 #define MAXH 30  // max height for the area 
@@ -28,10 +29,5 @@ int max_y_area(area_ptr area,char array_file[1000]);
 int min_x_area(area_ptr area,char array_file[1000]);
 
 int min_y_area(area_ptr area,char array_file[1000]);
-
-void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area);
-
-bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end);
-
 
 #endif
