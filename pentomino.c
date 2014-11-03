@@ -109,6 +109,7 @@ void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_en
     }
 }
 
+
 void free_pento (pentomino_ptr pentomino)
 {
   free(pentomino->square_sprite);

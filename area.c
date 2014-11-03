@@ -119,3 +119,4 @@ int min_y_area(area_ptr area,char array_file[1000]){
   return min;
 }
 
+
