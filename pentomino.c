@@ -238,11 +238,8 @@ void turn_pent(pentomino_ptr pentomino){
   }
   for(i = 0;i<5;i++){
     for(j = 0;j<5;j++){
-      printf("%c",pentomino->array_pent[i][j]);
     }
-    printf("\n");
   }
-  printf("\n");
 }
 
 void free_pento (pentomino_ptr pentomino)

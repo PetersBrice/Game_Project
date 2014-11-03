@@ -8,8 +8,8 @@
 #include "area.h"
 
 SDL_Surface *background;
-int WIDTH = 800;
-int HEIGHT = 600;
+int WIDTH = 1200;
+int HEIGHT = 700;
 
 void initSDL(void);
 void controls(int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],int array_end,area_ptr area,SDL_Surface * square_sprite);
@@ -27,7 +27,7 @@ void initSDL(void)
   }
   atexit(SDL_Quit);
   // load of the background
-  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
+  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF );
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
 
@@ -81,6 +81,10 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
       break;
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym){
+	// button escape to close
+      case SDLK_ESCAPE:
+	*end = 1;
+	break;
 	//button A for the mirror
       case SDLK_a:
 	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
@@ -171,43 +175,38 @@ int main(int argc, char** argv)
   int i,j;
   char array_file [1000];
   pentomino_ptr pento_array[20];
-  area_ptr area = NULL; 
-  /* open the pentomino file */
-  /* HERE test.txt NOT pentomino.txt*/
+  area_ptr area = NULL;
   int pos_mouse_x,pos_mouse_y=0;
   SDL_Surface * array_color[12];
   SDL_Surface * square_sprite;
   square_sprite = NULL ;
 
-  square_sprite = SDL_LoadBMP("smiley.bmp");
+  square_sprite = SDL_LoadBMP("black.bmp");
+
   /* open the pentomino file */  
   file = fopen("pentomino.txt", "r");
+
   /* beginning of the file */
   rewind(file);
+
   /* end of the file */
   array_end = file_array(array_file,file);
+
   /* close the file */
   fclose(file);
+
  /* say the number of pentominos */
   nb_pento = nb_pent(array_file,array_end);
   area = init_area(array_file,450,400);
   tab_color(array_color);
+
   /* set the pentominos in an array */
   tab_pento (array_file,pento_array,array_end,array_color);
+
   /* draw the pentominos and the area */
   draw_area (array_file,area,square_sprite,background);
   draw_array(pento_array,array_file,array_end,background);
   SDL_Flip(background);
-  //test
-  /*mirror(pento_array[0]);
-  mirror(pento_array[1]);
-  mirror(pento_array[2]);
-  mirror(pento_array[3]);
-  turn_pent(pento_array[0]);
-  turn_pent(pento_array[1]);
-  turn_pent(pento_array[2]);
-  turn_pent(pento_array[3]);*/
-  
  
 
   /* controls keyboard and mouse */

@@ -132,11 +132,9 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area){
   for(i = 0;i < 5;i++){
     if ((pentomino->square[i]->rcSrc.x >= max_x) || (pentomino->square[i]->rcSrc.y >= max_y) || (pentomino->square[i]->rcSrc.x <= min_x) || (pentomino->square[i]->rcSrc.y <= min_y)){
       in_area = false;
-      printf("dedan\n");
     }
   }
   if (in_area == true){
-    printf("dehors\n");
     for(i = 0;i < 5;i++){
       for(j = 0;j < size ;j++){
 	if(fabs(pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x)<min_next_x){
