@@ -34,3 +34,11 @@ void tab_color(SDL_Surface * array_color[12])
   array_color[10] = SDL_LoadBMP("white.bmp");
   array_color[11] = SDL_LoadBMP("yellow.bmp");
 }
+
+void free_color(SDL_Surface * array_color[12])
+{
+  int i;
+  for (i=0;i<12;i++){
+    SDL_FreeSurface(array_color[i]);
+  }
+}
