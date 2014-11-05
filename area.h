@@ -11,10 +11,11 @@ typedef struct area
 {
   char shape[15][15];
   square_ptr square[225];
+  SDL_Surface * square_sprite;
 } * area_ptr;
 
 //initialization of the area
-area_ptr init_area (char array_file[1000],int pos_x,int pos_y);
+area_ptr init_area (char array_file[1000],int pos_x,int pos_y,SDL_Surface * array_color [13]);
 
 void draw_area (char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *screen);
 

@@ -162,17 +162,27 @@ void turn_pent(pentomino_ptr pentomino,int pos_mouse_x,int pos_mouse_y)
   }
 }
 
-/* initialization of SDL */
+/* initialization of SDL_ttf and SDL */
 void initSDL(void)
 {
   SDL_Surface * background = NULL;
+
+  if (TTF_Init() < 0){
+    fprintf(stderr, "Error initialization of SDL_ttf : %s\n", TTF_GetError());
+    exit(EXIT_FAILURE);
+  }
+  atexit(TTF_Quit);
+
   if (SDL_Init (SDL_INIT_VIDEO) < 0){
     fprintf(stderr, "Error initialization of SDL : %s\n", SDL_GetError());
     exit(EXIT_FAILURE);
   }
   atexit(SDL_Quit);
+  // icon of the game
+  SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"), NULL);
   // load the screen
   screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
+  // title of the game
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
 
@@ -288,11 +298,24 @@ void update_coat (pentomino_ptr pento_array[20],int selected,int nb_pento)
   pento_array[nb_pento-1] = save_pento;
 }
 
+/* write the controls */
+SDL_Surface * write_controls (void)
+{
+  // load the police Orial, size 40, black color
+  TTF_Font * police = TTF_OpenFont("CrystallineOutline.ttf",30);
+  SDL_Color color = {0,0,0,0};
+  // picture of the text
+  SDL_Surface * text_controls = TTF_RenderText_Blended(police, "A : mirror        E : turn right", color);
+  TTF_CloseFont(police);
+  return text_controls;
+}
+
 /* draw the pentomino, the area and the background */
-void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background)
+void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls)
 {
   SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));
   SDL_BlitSurface(background,NULL,screen,&pos_background);
+  SDL_BlitSurface(text_controls,NULL,screen,&pos_text_controls);
   draw_area (array_file,area,square_sprite,screen);
   draw_array(pento_array,array_file,array_end,screen);
   SDL_Flip(screen);
