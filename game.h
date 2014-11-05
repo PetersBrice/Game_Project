@@ -11,11 +11,11 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area);
 
 bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end);
 
-void mirror(pentomino_ptr pentomino);
+void mirror(pentomino_ptr pentomino ,int pos_mouse_x,int pos_mouse_y);
 
 bool test_pento(char array_file[1000], int array_end);
 
-void turn_pent(pentomino_ptr pentomino);
+void turn_pent(pentomino_ptr pentomino,int pos_mouse_x ,int pos_mouse_y);
 
 void initSDL(void);
 

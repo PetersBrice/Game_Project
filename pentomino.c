@@ -111,3 +111,78 @@ void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_en
 
 
 
+int pos_x_array(pentomino_ptr pent){
+  int i,j,pos_x,pos_y;
+  bool find;
+  pos_x = 10000;
+  pos_y = min_y_pent(pent);
+  for (i = 0;i < 5;i++){
+    if(pent->square[i]->rcSrc.y == pos_y && pent->square[i]->rcSrc.x < pos_x){
+      printf("oui\n");
+      pos_x = pent->square[i]->rcSrc.x ;
+    }
+  }
+  i = 0;
+  j = 0;
+  while (i < 5 && j < 5 && find == false){
+    if (pent->array_pent[i][j] == '#'){
+      find = true ;
+    }
+    if (!find){
+      j++;
+      if (j == 5){
+	i++;
+	j = 0;
+      }
+    }
+  }
+  pos_x = pos_x - j * SIZE_SQUARE;
+  return pos_x;
+}
+
+int pos_y_array(pentomino_ptr pent){
+  int i,j,pos_y;
+  bool find;
+  i = 0;
+  j = 0;
+  pos_y = min_y_pent(pent);
+  while (i < 5 && j < 5 && find == false){
+    if (pent->array_pent[i][j] == '#'){
+      find = true ;
+    }
+    if (!find){
+      j++;
+      if (j == 5){
+	i++;
+	j = 0;
+      }
+    }
+  }
+  pos_y = pos_y - i * SIZE_SQUARE;
+  return pos_y;
+}
+
+int min_x_pent(pentomino_ptr pent){
+  int i;
+  int min_x = 10000;
+  for(i = 0 ; i < 5 ; i++){
+    printf("min_x %d\n",min_x);
+    printf("x %d\n",pent->square[i]->rcSrc.x);
+    if (pent->square[i]->rcSrc.x < min_x){
+      printf("oui\n");
+      min_x = pent->square[i]->rcSrc.x ;
+    }
+  }
+  return min_x;
+}
+
+int min_y_pent(pentomino_ptr pent){
+  int i;
+  int min_y = 10000;
+  for(i = 0 ; i < 5 ; i++){
+    if (pent->square[i]->rcSrc.y < min_y){
+      min_y = pent->square[i]->rcSrc.y ;
+    }
+  }
+  return min_y;
+}

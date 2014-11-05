@@ -63,9 +63,9 @@ bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr are
   return end;
 }
 
-void mirror(pentomino_ptr pentomino)
+void mirror(pentomino_ptr pentomino,int pos_mouse_x,int pos_mouse_y)
 {
-  int i,j,max_col;
+  int i,j,max_col,dif_x,dif_y;
   max_col = 0;
   int min = 2000;
   int max = 0;
@@ -77,6 +77,7 @@ void mirror(pentomino_ptr pentomino)
 	max_col = j ;
       }
     }
+    printf("max_col %d\n",max_col);
     if (pentomino->square[i]->rcSrc.x<min){
       min = pentomino->square[i]->rcSrc.x;
     }
@@ -111,6 +112,14 @@ void mirror(pentomino_ptr pentomino)
       pentomino->square[i]->rcSrc.x = min; 
     }      
   }
+  dif_x = pentomino->square[0]->rcSrc.x - (pos_mouse_x-SIZE_SQUARE/2) ;
+  dif_y = pentomino->square[0]->rcSrc.y - (pos_mouse_y-SIZE_SQUARE/2) ;
+  pentomino->square[0]->rcSrc.x = pos_mouse_x-SIZE_SQUARE/2;
+  pentomino->square[0]->rcSrc.y = pos_mouse_y-SIZE_SQUARE/2;
+  for(i=1;i<5;i++){
+    pentomino->square[i]->rcSrc.x = pentomino->square[i]->rcSrc.x - dif_x;
+    pentomino->square[i]->rcSrc.y = pentomino->square[i]->rcSrc.y - dif_y;
+  }
 }
 
 bool test_pento(char array_file[1000], int array_end)
@@ -120,13 +129,13 @@ bool test_pento(char array_file[1000], int array_end)
   return area % nb_pento == 0;
 }
 
-void turn_pent(pentomino_ptr pentomino)
+void turn_pent(pentomino_ptr pentomino,int pos_mouse_x,int pos_mouse_y)
 {
-  int i,j,temp_x,temp_y,nb_square;
+  int i,j,temp_x,temp_y,temp_X,temp_Y,nb_square;
   char temp[5][5];
   nb_square = 0;
-  temp_x = pentomino->square[0]->rcSrc.x;
-  temp_y = pentomino->square[0]->rcSrc.y;
+  temp_X = pos_x_array(pentomino) + 5*SIZE_SQUARE;
+  temp_Y = pos_y_array(pentomino);
   for(i = 0;i < 5;i++){
     for(j = 0;j < 5;j++){
       temp[i][j] = pentomino->array_pent[j][4-i];
@@ -137,19 +146,18 @@ void turn_pent(pentomino_ptr pentomino)
       pentomino->array_pent[i][j] = temp[i][j];
     }
   }
+  printf("y %d\n",pentomino->square[0]->rcSrc.y);
+  temp_x = pos_mouse_x - pos_mouse_y + temp_Y;
+  temp_y = pos_mouse_x + pos_mouse_y - temp_X;
   while(nb_square<5){
     for(i = 0;i<5;i++){
-      for(j = 0;j<5;j++){
-	if(pentomino->array_pent[i][j] == '#'){
-	  pentomino->square[nb_square]->rcSrc.x =  j*SIZE_SQUARE+temp_x;
-	  pentomino->square[nb_square]->rcSrc.y = i*SIZE_SQUARE +temp_y;
-	  nb_square++;
-	}
-      }
-    }
-  }
-  for(i = 0;i<5;i++){
-    for(j = 0;j<5;j++){
+       for(j = 0;j<5;j++){
+	 if(pentomino->array_pent[i][j] == '#'){
+	   pentomino->square[nb_square]->rcSrc.x = temp_x + j * SIZE_SQUARE;
+	   pentomino->square[nb_square]->rcSrc.y = temp_y + i * SIZE_SQUARE;
+	   nb_square++;
+	 }
+       }
     }
   }
 }
@@ -219,14 +227,14 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
 	// mirror and draw
 	if(selected != -1){
-	  mirror(pento_array[selected]);
+	  mirror(pento_array[selected],*pos_mouse_x,*pos_mouse_y);
 	}
 	break;
       case SDLK_e:
 	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
 	// turn and draw
 	if(selected != -1){
-	  turn_pent(pento_array[selected]);
+	  turn_pent(pento_array[selected],*pos_mouse_x,*pos_mouse_y);
 	}
 	break;
       }
