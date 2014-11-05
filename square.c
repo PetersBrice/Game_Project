@@ -19,7 +19,7 @@ void draw_square(square_ptr square,SDL_Surface *square_sprite,SDL_Surface *backg
   SDL_BlitSurface(square_sprite,NULL,background,&pos_square);
 }
 
-void tab_color(SDL_Surface * array_color[12])
+void tab_color(SDL_Surface * array_color[13])
 {
   array_color[0] = SDL_LoadBMP("blue.bmp");
   array_color[1] = SDL_LoadBMP("lightgreen.bmp");
@@ -33,9 +33,11 @@ void tab_color(SDL_Surface * array_color[12])
   array_color[9] = SDL_LoadBMP("red.bmp");
   array_color[10] = SDL_LoadBMP("white.bmp");
   array_color[11] = SDL_LoadBMP("yellow.bmp");
+  array_color[12] = SDL_LoadBMP("black.bmp");
 }
 
-void free_color(SDL_Surface * array_color[12])
+/* free the sprites of the pentominos's squares */
+void free_color(SDL_Surface * array_color[13])
 {
   int i;
   for (i=0;i<12;i++){

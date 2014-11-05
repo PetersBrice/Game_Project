@@ -19,50 +19,54 @@ int main(int argc, char** argv)
   pentomino_ptr pento_array[20];
   area_ptr area = NULL;
   int pos_mouse_x,pos_mouse_y=0;
-  SDL_Surface * array_color[12];
+  SDL_Surface * array_color[13];
   SDL_Surface * background = NULL;
+  SDL_Surface * text_controls = NULL;
   SDL_Rect pos_background;
-  SDL_Surface * square_sprite = NULL;
+  SDL_Rect pos_text_controls;
+
+  // load the text for the controls and his position
+  text_controls =  write_controls();
+  pos_text_controls.x = 10;
+  pos_text_controls.y = 10;
 
   // load the background and his position
   background = SDL_LoadBMP("background.bmp");
   pos_background.x = 0;
   pos_background.y = 0;
 
-  square_sprite = SDL_LoadBMP("black.bmp");
-  SDL_SetColorKey(square_sprite,SDL_RLEACCEL | SDL_SRCCOLORKEY,SDL_MapRGB(square_sprite->format,0,0,0));
-
   /* open the pentomino file */  
   file = fopen("pentomino.txt", "r");
-
   /* beginning of the file */
   rewind(file);
-
   /* end of the file */
   array_end = file_array(array_file,file);
-
   /* close the file */
   fclose(file);
 
- /* say the number of pentominos */
+  /* say the number of pentominos */
   nb_pento = nb_pent(array_file,array_end);
-  area = init_area(array_file,450,400);
+  /* load the sprites */
   tab_color(array_color);
-
+  /* create the area */
+  area = init_area(array_file,450,400,array_color);
   /* set the pentominos in an array */
   tab_pento (array_file,pento_array,array_end,array_color);
 
   /* draw the pentomino, the area and the background */
-  draw_all (array_file,area,square_sprite,array_end,pento_array,background,pos_background);
+  draw_all (array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls);
 
-  /* controls keyboard and mouse */
   while (end != 1){
+    /* wait an action of the player */
     controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,area);
-    draw_all(array_file,area,square_sprite,array_end,pento_array,background,pos_background);
+    /* update the screen */
+    draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls);
+    /* end of the game */
     if (final_test(array_file,pento_array,area,array_end)){
       end = 1;
     }
   }
+  /* free all */
   free_color(array_color);
   SDL_FreeSurface(background);
   return EXIT_SUCCESS;

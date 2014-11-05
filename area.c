@@ -1,22 +1,24 @@
 #include "area.h"
 #define SIZE_SQUARE 30 
 
-area_ptr init_area (char array_file[1000],int pos_x,int pos_y)
+/* create the area */
+area_ptr init_area (char array_file[1000],int pos_x,int pos_y,SDL_Surface * array_color [13])
 {
   area_ptr area = (area_ptr) malloc (sizeof(struct area));
   get_area(array_file,area->shape);
   get_square_area(array_file,area->shape,area->square,pos_x,pos_y);
+  area->square_sprite = array_color[12];
+  SDL_SetColorKey(area->square_sprite,SDL_RLEACCEL | SDL_SRCCOLORKEY,SDL_MapRGB(area->square_sprite->format,0,0,0));
   return area;
 }
 
-
-
+/* draw the area */
 void draw_area(char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *screen)
 {
   int i,size ;
   size = size_area(array_file);
   for(i=0;i<size;i++){
-    draw_square(area->square[i],square_sprite,screen);
+    draw_square(area->square[i],area->square_sprite,screen);
    
   }
 }
