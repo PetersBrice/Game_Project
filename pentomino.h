@@ -29,7 +29,7 @@ typedef struct pentomino
 pentomino_ptr new_pentomino(int position);
 
 /*drew a new pentomino*/
-void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *background);
+void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *screen);
 
 /*take the shape of a pentomino in the file*/
 int new_array(char array_file[1000],int pos_file,char array_pent[5][5]);
@@ -41,7 +41,7 @@ void get_square(square_ptr square[5],char array_pent[5][5] ,int pos_x,int pos_y)
 void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[12]);
 
 
-void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *background);
+void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *screen);
 
 void free_pento(pentomino_ptr pentomino);
 

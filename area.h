@@ -16,7 +16,7 @@ typedef struct area
 //initialization of the area
 area_ptr init_area (char array_file[1000],int pos_x,int pos_y);
 
-void draw_area (char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *background);
+void draw_area (char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *screen);
 
 void get_area(char array_file[1000],char shape[15][15]);
 

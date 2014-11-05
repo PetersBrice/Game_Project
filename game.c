@@ -1,7 +1,8 @@
 #include "game.h"
 #define SIZE_SQUARE 30
 
-void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area){
+void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area)
+{
   int i,j,min_x,min_y,max_x,max_y,min_next_x,min_next_y,next_x,next_y,size;
   size = size_area(array_file);
   min_next_x = SIZE_SQUARE;
@@ -36,7 +37,8 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area){
   }
 }
 
-bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end){
+bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end)
+{
   bool end = true;
   int i,j,size,nb_square,nb_pento;
   size = size_area(array_file);
@@ -61,7 +63,8 @@ bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr are
   return end;
 }
 
-void mirror(pentomino_ptr pentomino){
+void mirror(pentomino_ptr pentomino)
+{
   int i,j,max_col;
   max_col = 0;
   int min = 2000;
@@ -81,8 +84,6 @@ void mirror(pentomino_ptr pentomino){
       max = pentomino->square[i]->rcSrc.x;
     }
   }
-  printf("%d\n",max_col);
-  //ok
   for (i = 0;i < 5;i++){
     for (j = 0;j <= max_col;j++){
       new_shape[i][j]=pentomino->array_pent[i][max_col-j];
@@ -112,14 +113,15 @@ void mirror(pentomino_ptr pentomino){
   }
 }
 
-bool test_pento(char array_file[1000], int array_end){
+bool test_pento(char array_file[1000], int array_end)
+{
   int area = size_area(array_file);
   int nb_pento = nb_pent(array_file, array_end);
   return area % nb_pento == 0;
 }
 
-
-void turn_pent(pentomino_ptr pentomino){
+void turn_pent(pentomino_ptr pentomino)
+{
   int i,j,temp_x,temp_y,nb_square;
   char temp[5][5];
   nb_square = 0;
@@ -148,28 +150,26 @@ void turn_pent(pentomino_ptr pentomino){
   }
   for(i = 0;i<5;i++){
     for(j = 0;j<5;j++){
-      printf("%c",pentomino->array_pent[i][j]);
     }
-    printf("\n");
   }
-  printf("\n");
 }
 
 /* initialization of SDL */
 void initSDL(void)
 {
+  SDL_Surface * background = NULL;
   if (SDL_Init (SDL_INIT_VIDEO) < 0){
     fprintf(stderr, "Error initialization of SDL : %s\n", SDL_GetError());
     exit(EXIT_FAILURE);
   }
   atexit(SDL_Quit);
-  // load of the background
-  background = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
+  // load the screen
+  screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
 
 /* controls */
-void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],int array_end,area_ptr area,SDL_Surface * square_sprite)
+void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],area_ptr area)
 {
   SDL_Event event;
   int i;
@@ -199,10 +199,6 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
       selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
       if(selected != -1){
 	auto_set(array_file,pento_array[selected],area);
-	SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-	draw_area (array_file,area,square_sprite,background);
-	draw_array(pento_array,array_file,array_end,background);
-	SDL_Flip(background);
       }
       break;
     case SDL_MOUSEMOTION:
@@ -212,7 +208,7 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 	// if click on a pentomino
 	if (selected != -1){
 	  // move the pentomino
-	  move (selected,pento_array,pos_mouse_x,pos_mouse_y,array_file,array_end,event,area,square_sprite);
+	  move (selected,pento_array,pos_mouse_x,pos_mouse_y,event);
 	}
       }      
       break;
@@ -224,10 +220,6 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 	// mirror and draw
 	if(selected != -1){
 	  mirror(pento_array[selected]);
-	  SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-	  draw_area (array_file,area,square_sprite,background);
-	  draw_array(pento_array,array_file,array_end,background);
-	  SDL_Flip(background);
 	}
 	break;
       case SDLK_e:
@@ -235,10 +227,6 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 	// turn and draw
 	if(selected != -1){
 	  turn_pent(pento_array[selected]);
-	  SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-	  draw_area (array_file,area,square_sprite,background);
-	  draw_array(pento_array,array_file,array_end,background);
-	  SDL_Flip(background);
 	}
 	break;
       }
@@ -247,27 +235,19 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 }
 
 /* move the pentomino selected */
-void move (int selected,pentomino_ptr pento_array[20],int * pos_mouse_x,int * pos_mouse_y,char array_file [1000],int array_end,SDL_Event event,area_ptr area,SDL_Surface * square_sprite)
+void move (int selected,pentomino_ptr pento_array[20],int * pos_mouse_x,int * pos_mouse_y,SDL_Event event)
 {
   int i;
-  //SDL_Surface * save_sprite;
   for (i=0;i<5;i++){
     pento_array[selected]->square[i]->rcSrc.x = pento_array[selected]->square[i]->rcSrc.x + event.motion.x - *pos_mouse_x;
     pento_array[selected]->square[i]->rcSrc.y = pento_array[selected]->square[i]->rcSrc.y + event.motion.y - *pos_mouse_y;
   }
   *pos_mouse_x=event.button.x;
   *pos_mouse_y=event.button.y;
-  SDL_FillRect(background,NULL,SDL_MapRGB(background->format,0,0,0));
-  draw_area (array_file,area,square_sprite,background);
-  draw_array(pento_array,array_file,array_end,background);
-  //save_sprite = pento_array[selected]->square_sprite;
-  //SDL_FreeSurface(pento_array[selected]->square_sprite);
-  //pento_array[selected]->square_sprite = save_sprite;
-  //draw_pentomino(pento_array[selected],background);
-  SDL_Flip(background);
 }
 
-int select_pento (int nb_pento,struct pentomino ** pento_array, int pos_mouse_x, int pos_mouse_y)
+/* return the pentomino selected */
+int select_pento (int nb_pento,pentomino_ptr pento_array[20], int pos_mouse_x, int pos_mouse_y)
 {
   int i,j;
   int selected = -1;
@@ -289,7 +269,8 @@ int select_pento (int nb_pento,struct pentomino ** pento_array, int pos_mouse_x,
   return selected;
 }
 
-void update_coat (struct pentomino ** pento_array,int selected,int nb_pento)
+/* update the coats of the pentomino to draw */
+void update_coat (pentomino_ptr pento_array[20],int selected,int nb_pento)
 {
   int i;
   pentomino_ptr save_pento = pento_array[selected];
@@ -297,4 +278,14 @@ void update_coat (struct pentomino ** pento_array,int selected,int nb_pento)
     pento_array[i-1] = pento_array[i];
   }
   pento_array[nb_pento-1] = save_pento;
+}
+
+/* draw the pentomino, the area and the background */
+void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background)
+{
+  SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));
+  SDL_BlitSurface(background,NULL,screen,&pos_background);
+  draw_area (array_file,area,square_sprite,screen);
+  draw_array(pento_array,array_file,array_end,screen);
+  SDL_Flip(screen);
 }

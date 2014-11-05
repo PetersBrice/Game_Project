@@ -11,12 +11,12 @@ area_ptr init_area (char array_file[1000],int pos_x,int pos_y)
 
 
 
-void draw_area(char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *background)
+void draw_area(char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SDL_Surface *screen)
 {
   int i,size ;
   size = size_area(array_file);
   for(i=0;i<size;i++){
-    draw_square(area->square[i],square_sprite,background);
+    draw_square(area->square[i],square_sprite,screen);
    
   }
 }

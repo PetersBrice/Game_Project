@@ -20,11 +20,11 @@ pentomino_ptr new_pentomino(int position)
   return new_pent;
 }
 
-void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *background)
+void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *screen)
 {
   int i ;
   for(i=0;i<5;i++){
-    draw_square(pentomino->square[i],pentomino->square_sprite,background);
+    draw_square(pentomino->square[i],pentomino->square_sprite,screen);
   }
 }
 
@@ -100,12 +100,12 @@ void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_e
      
 
       
-void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *background){
+void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *screen){
   int i,nb_pento;
   nb_pento = nb_pent(array_file,array_end);
     for (i = 0;i<nb_pento;i++){
       pento_array[i]->coat = i;
-      draw_pentomino(pento_array[i],background);
+      draw_pentomino(pento_array[i],screen);
     }
 }
 
