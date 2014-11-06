@@ -305,7 +305,7 @@ SDL_Surface * write_controls (void)
   TTF_Font * police = TTF_OpenFont("CrystallineOutline.ttf",30);
   SDL_Color color = {0,0,0,0};
   // picture of the text
-  SDL_Surface * text_controls = TTF_RenderText_Blended(police, "A : mirror        E : turn right", color);
+  SDL_Surface * text_controls = TTF_RenderText_Blended(police, "A : mirror        E : turn", color);
   TTF_CloseFont(police);
   return text_controls;
 }
