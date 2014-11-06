@@ -37,7 +37,7 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,pentomino_ptr pento_
   max_y = max_y_area(area,array_file);
   bool in_area = true;
   for(i = 0;i < 5;i++){
-    if ((pentomino->square[i]->rcSrc.x+SIZE_SQUARE >= max_x) || (pentomino->square[i]->rcSrc.y+SIZE_SQUARE >= max_y) || (pentomino->square[i]->rcSrc.x <= min_x) || (pentomino->square[i]->rcSrc.y <= min_y)){
+    if ((pentomino->square[i]->rcSrc.x+SIZE_SQUARE >= max_x+5) || (pentomino->square[i]->rcSrc.y+SIZE_SQUARE >= max_y+5) || (pentomino->square[i]->rcSrc.x <= min_x-5) || (pentomino->square[i]->rcSrc.y <= min_y-5)){
       in_area = false;
     }
   }
