@@ -34,4 +34,5 @@ SDL_Surface * write_controls (void);
 
 void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls);
 
+void free_all(area_ptr area,pentomino_ptr pento_array[20],char array_file[1000],int array_end);
 #endif

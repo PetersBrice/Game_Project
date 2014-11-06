@@ -53,5 +53,9 @@ int pos_x_array(pentomino_ptr pent);
 
 int pos_y_array(pentomino_ptr pent);
 
+void free_pentomino(pentomino_ptr pentomino);
+
+void free_pento_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end);
+
 #endif
 

@@ -45,3 +45,7 @@ void free_color(SDL_Surface * array_color[14])
     SDL_FreeSurface(array_color[i]);
   }
 }
+
+void free_square(square_ptr square){
+  free(square);
+}

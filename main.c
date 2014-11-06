@@ -68,6 +68,7 @@ int main(int argc, char** argv)
   }
   /* free all */
   free_color(array_color);
+  free_all(area,pento_array,array_file,array_end);
   SDL_FreeSurface(background);
   return EXIT_SUCCESS;
 }

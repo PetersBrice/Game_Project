@@ -26,6 +26,7 @@ void test_set (char array_file[1000],pentomino_ptr pento_array[20],area_ptr area
 void auto_set(char array_file[1000],pentomino_ptr pentomino,pentomino_ptr pento_array[20],area_ptr area,int array_end)
 {
   bool set = true;
+  int nb_set = 0;
   int i,j,min_x,min_y,max_x,max_y,min_next_x,min_next_y,next_x,next_y,size;
   size = size_area(array_file);
   min_next_x = SIZE_SQUARE;
@@ -36,7 +37,7 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,pentomino_ptr pento_
   max_y = max_y_area(area,array_file);
   bool in_area = true;
   for(i = 0;i < 5;i++){
-    if ((pentomino->square[i]->rcSrc.x >= max_x) || (pentomino->square[i]->rcSrc.y >= max_y) || (pentomino->square[i]->rcSrc.x <= min_x) || (pentomino->square[i]->rcSrc.y <= min_y)){
+    if ((pentomino->square[i]->rcSrc.x+SIZE_SQUARE >= max_x) || (pentomino->square[i]->rcSrc.y+SIZE_SQUARE >= max_y) || (pentomino->square[i]->rcSrc.x <= min_x) || (pentomino->square[i]->rcSrc.y <= min_y)){
       in_area = false;
     }
   }
@@ -57,13 +58,14 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,pentomino_ptr pento_
     for (i = 0;i < 5;i++){
       for (j = 0;j < size;j++){
 	if ((-next_y+pentomino->square[i]->rcSrc.y == area->square[j]->rcSrc.y) && (-next_x+pentomino->square[i]->rcSrc.x == area->square[j]->rcSrc.x)){
+	  nb_set ++;
 	  if(area->square[j]->set){
 	    set = false;
 	  }
 	}
       }
     }
-    if (set){
+    if (set && nb_set == 5){
       for (i = 0;i<5;i++){
 	pentomino->square[i]->rcSrc.y = -next_y+pentomino->square[i]->rcSrc.y;
 	pentomino->square[i]->rcSrc.x = -next_x+pentomino->square[i]->rcSrc.x;
@@ -342,4 +344,9 @@ void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,
   draw_area (array_file,area,square_sprite,screen);
   draw_array(pento_array,array_file,array_end,screen);
   SDL_Flip(screen);
+}
+
+void free_all(area_ptr area,pentomino_ptr pento_array[20],char array_file[1000],int array_end){
+  free_area(area,array_file);
+  free_pento_array(pento_array,array_file,array_end);
 }
