@@ -1,9 +1,13 @@
-TODO (nouveau)
+TODO
 
-6 octobre :
+6 october :
+- test create and draw function
+- use the mouse and mouse click
+- find how to know when the puzzle is complete 
 
-test create and draw function
+6 november :
+- timer
+- squares white but not opaque
+- auto-set adjusted when there is a hole in the area
+- end screen
 
-use the mouse and mouse click
-
-find how to know when the puzzle is complete 

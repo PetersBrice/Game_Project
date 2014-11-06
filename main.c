@@ -19,7 +19,7 @@ int main(int argc, char** argv)
   pentomino_ptr pento_array[20];
   area_ptr area = NULL;
   int pos_mouse_x,pos_mouse_y=0;
-  SDL_Surface * array_color[13];
+  SDL_Surface * array_color[14];
   SDL_Surface * background = NULL;
   SDL_Surface * text_controls = NULL;
   SDL_Rect pos_background;
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
   /* load the sprites */
   tab_color(array_color);
   /* create the area */
-  area = init_area(array_file,450,400,array_color);
+  area = init_area(array_file,230,100,array_color);
   /* set the pentominos in an array */
   tab_pento (array_file,pento_array,array_end,array_color);
 

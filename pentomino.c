@@ -76,7 +76,7 @@ void get_square(square_ptr square[5] ,char array_pent[5][5],int pos_x,int pos_y)
   }
 }
 
-void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[13]){
+void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[14]){
   int nb_pento,i,pos_file,pos_pento;
   int j = 0;
   pos_pento = 50;
