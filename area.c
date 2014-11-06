@@ -123,4 +123,9 @@ int min_y_area(area_ptr area,char array_file[1000]){
   return min;
 }
 
-
+void free_area (area_ptr area)
+{
+  SDL_FreeSurface(area->square_sprite);
+  SDL_FreeSurface(area->contour_sprite);
+  free(area);
+}

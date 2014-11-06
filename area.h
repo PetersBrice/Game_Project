@@ -32,4 +32,6 @@ int min_x_area(area_ptr area,char array_file[1000]);
 
 int min_y_area(area_ptr area,char array_file[1000]);
 
+void free_area(area_ptr area);
+
 #endif

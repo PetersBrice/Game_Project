@@ -17,7 +17,7 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area)
       in_area = false;
     }
   }
-  if (in_area == true){
+  if (in_area){
     for(i = 0;i < 5;i++){
       for(j = 0;j < size ;j++){
 	if(fabs(pentomino->square[i]->rcSrc.x-area->square[j]->rcSrc.x)<min_next_x){
@@ -56,7 +56,7 @@ bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr are
     }
   }
   for(i = 0;i < size;i++){
-    if(area->square[i]->set == false){
+    if(!area->square[i]->set){
       end = false;
     }
   }
@@ -77,7 +77,6 @@ void mirror(pentomino_ptr pentomino,int pos_mouse_x,int pos_mouse_y)
 	max_col = j ;
       }
     }
-    printf("max_col %d\n",max_col);
     if (pentomino->square[i]->rcSrc.x<min){
       min = pentomino->square[i]->rcSrc.x;
     }
@@ -146,7 +145,6 @@ void turn_pent(pentomino_ptr pentomino,int pos_mouse_x,int pos_mouse_y)
       pentomino->array_pent[i][j] = temp[i][j];
     }
   }
-  printf("y %d\n",pentomino->square[0]->rcSrc.y);
   temp_x = pos_mouse_x - pos_mouse_y + temp_Y;
   temp_y = pos_mouse_x + pos_mouse_y - temp_X;
   while(nb_square<5){
@@ -181,7 +179,7 @@ void initSDL(void)
   // icon of the game
   SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"), NULL);
   // load the screen
-  screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
+  screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
   // title of the game
   SDL_WM_SetCaption("PUZZLE", NULL);
 }
@@ -192,7 +190,7 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
   SDL_Event event;
   int i;
   int selected;
-  SDL_WaitEvent(&event);
+  SDL_PollEvent(&event);
   switch (event.type){
     // click on the cross
     case SDL_QUIT:
@@ -235,18 +233,20 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 	//button A for the mirror
       case SDLK_a:
 	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
-	// mirror and draw
+	// mirror
 	if(selected != -1){
 	  mirror(pento_array[selected],*pos_mouse_x,*pos_mouse_y);
 	}
 	break;
       case SDLK_e:
 	selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
-	// turn and draw
+	// turn
 	if(selected != -1){
 	  turn_pent(pento_array[selected],*pos_mouse_x,*pos_mouse_y);
 	}
 	break;
+      case SDLK_ESCAPE:
+	*end = 1;
       }
       break;
     }
@@ -275,7 +275,7 @@ int select_pento (int nb_pento,pentomino_ptr pento_array[20], int pos_mouse_x, i
     // verification for all the squares of the pentominos
     for (j=0;j<5;j++){
       // if collide
-      if (pos_mouse_x > pento_array[i]->square[j]->rcSrc.x && pos_mouse_x < pento_array[i]->square[j]->rcSrc.x + 30 && pos_mouse_y > pento_array[i]->square[j]->rcSrc.y && pos_mouse_y < pento_array[i]->square[j]->rcSrc.y + 30){
+      if (pos_mouse_x > pento_array[i]->square[j]->rcSrc.x && pos_mouse_x < pento_array[i]->square[j]->rcSrc.x + SIZE_SQUARE && pos_mouse_y > pento_array[i]->square[j]->rcSrc.y && pos_mouse_y < pento_array[i]->square[j]->rcSrc.y + SIZE_SQUARE){
 	  // choose the pentomino on the first coat
 	  if (pento_array[i]->coat >= coat){
 	    coat = pento_array[i]->coat;
@@ -309,6 +309,11 @@ SDL_Surface * write_controls (void)
   TTF_CloseFont(police);
   return text_controls;
 }
+
+/*SDL_Surface * write_controls (int time,char clock [20],char sec [2],char mn [2], char h [2])
+{
+TTF_RenderText_Solid(police,"%d h %d mn %d s",couleur);
+}*/
 
 /* draw the pentomino, the area and the background */
 void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls)

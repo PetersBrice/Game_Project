@@ -117,14 +117,12 @@ int pos_x_array(pentomino_ptr pent){
   pos_x = 10000;
   pos_y = min_y_pent(pent);
   for (i = 0;i < 5;i++){
-    if(pent->square[i]->rcSrc.y == pos_y && pent->square[i]->rcSrc.x < pos_x){
-      printf("oui\n");
+    if(pent->square[i]->rcSrc.y == pos_y && pent->square[i]->rcSrc.x < pos_x)
       pos_x = pent->square[i]->rcSrc.x ;
-    }
   }
   i = 0;
   j = 0;
-  while (i < 5 && j < 5 && find == false){
+  while (i < 5 && j < 5 && !find){
     if (pent->array_pent[i][j] == '#'){
       find = true ;
     }

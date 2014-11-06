@@ -15,6 +15,7 @@ int main(int argc, char** argv)
   int end,click,nb_pento,array_end = 0;
   FILE *file;
   int i,j;
+  int timer = 0;
   char array_file [1000];
   pentomino_ptr pento_array[20];
   area_ptr area = NULL;
@@ -57,6 +58,8 @@ int main(int argc, char** argv)
   draw_all (array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls);
 
   while (end != 1){
+    /* update the timer */
+    timer = SDL_GetTicks();
     /* wait an action of the player */
     controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,area);
     /* update the screen */
@@ -67,6 +70,7 @@ int main(int argc, char** argv)
     }
   }
   /* free all */
+  free_area(area);
   free_color(array_color);
   SDL_FreeSurface(background);
   return EXIT_SUCCESS;
