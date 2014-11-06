@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 
   while (end != 1){
     /* wait an action of the player */
-    controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,area);
+    controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,area,array_end);
     /* update the screen */
     draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls);
     /* end of the game */

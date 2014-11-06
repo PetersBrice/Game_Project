@@ -1,8 +1,31 @@
 #include "game.h"
 #define SIZE_SQUARE 30
 
-void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area)
+void test_set (char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end)
 {
+  int i,j,size,nb_square,nb_pento;
+  size = size_area(array_file);
+  nb_pento = nb_pent(array_file,array_end);
+  for(i = 0;i< size;i++){
+    area->square[i]->set = false;
+  }
+  for(i = 0;i < size;i++){
+    for(j = 0;j < nb_pento;j++){
+      for(nb_square = 0;nb_square<5;nb_square++){
+	if((area->square[i]->rcSrc.x == pento_array[j]->square[nb_square]->rcSrc.x) && (area->square[i]->rcSrc.y == pento_array[j]->square[nb_square]->rcSrc.y)){
+	  area->square[i]-> set = true;
+	}
+      }
+    }
+  }
+}
+  
+  
+  
+
+void auto_set(char array_file[1000],pentomino_ptr pentomino,pentomino_ptr pento_array[20],area_ptr area,int array_end)
+{
+  bool set = true;
   int i,j,min_x,min_y,max_x,max_y,min_next_x,min_next_y,next_x,next_y,size;
   size = size_area(array_file);
   min_next_x = SIZE_SQUARE;
@@ -30,31 +53,31 @@ void auto_set(char array_file[1000],pentomino_ptr pentomino,area_ptr area)
 	}
       }
     }
-    for (i = 0;i<5;i++){
-      pentomino->square[i]->rcSrc.y = -next_y+pentomino->square[i]->rcSrc.y;
-      pentomino->square[i]->rcSrc.x = -next_x+pentomino->square[i]->rcSrc.x;
+    test_set (array_file,pento_array,area,array_end);
+    for (i = 0;i < 5;i++){
+      for (j = 0;j < size;j++){
+	if ((-next_y+pentomino->square[i]->rcSrc.y == area->square[j]->rcSrc.y) && (-next_x+pentomino->square[i]->rcSrc.x == area->square[j]->rcSrc.x)){
+	  if(area->square[j]->set){
+	    set = false;
+	  }
+	}
+      }
+    }
+    if (set){
+      for (i = 0;i<5;i++){
+	pentomino->square[i]->rcSrc.y = -next_y+pentomino->square[i]->rcSrc.y;
+	pentomino->square[i]->rcSrc.x = -next_x+pentomino->square[i]->rcSrc.x;
+      }
     }
   }
 }
 
 bool final_test(char array_file[1000],pentomino_ptr pento_array[20],area_ptr area,int array_end)
 {
+  int i;
   bool end = true;
-  int i,j,size,nb_square,nb_pento;
-  size = size_area(array_file);
-  nb_pento = nb_pent(array_file,array_end);
-  for(i = 0;i< size;i++){
-    area->square[i]->set = false;
-  }
-  for(i = 0;i < size;i++){
-    for(j = 0;j < nb_pento;j++){
-      for(nb_square = 0;nb_square<5;nb_square++){
-	if((area->square[i]->rcSrc.x == pento_array[j]->square[nb_square]->rcSrc.x) && (area->square[i]->rcSrc.y == pento_array[j]->square[nb_square]->rcSrc.y)){
-	  area->square[i]-> set = true;
-	}
-      }
-    }
-  }
+  int size = size_area(array_file); 
+  test_set ( array_file,pento_array,area,array_end);
   for(i = 0;i < size;i++){
     if(area->square[i]->set == false){
       end = false;
@@ -187,7 +210,7 @@ void initSDL(void)
 }
 
 /* controls */
-void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],area_ptr area)
+void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click, int * pos_mouse_x, int * pos_mouse_y,char array_file[1000],area_ptr area,int array_end)
 {
   SDL_Event event;
   int i;
@@ -216,7 +239,7 @@ void controls (int nb_pento,int * end,pentomino_ptr pento_array[20], int *click,
 	*click = 0;
       selected = select_pento (nb_pento,pento_array,*pos_mouse_x,*pos_mouse_y);
       if(selected != -1){
-	auto_set(array_file,pento_array[selected],area);
+	auto_set(array_file,pento_array[selected],pento_array,area,array_end);
       }
       break;
     case SDL_MOUSEMOTION:
