@@ -184,3 +184,19 @@ int min_y_pent(pentomino_ptr pent){
   }
   return min_y;
 }
+
+void free_pentomino(pentomino_ptr pentomino){
+  int i;
+  for(i = 0 ;i < 5;i ++){
+    free_square(pentomino->square[i]);
+  }
+  free(pentomino);
+}
+
+void free_pento_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end){
+  int i,nb_pento;
+  nb_pento = nb_pent(array_file,array_end); 
+  for(i = 0;i<nb_pento;i++){
+    free_pentomino(pento_array[i]);
+  }
+}

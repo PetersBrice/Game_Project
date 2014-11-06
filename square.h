@@ -22,4 +22,6 @@ void tab_color (SDL_Surface * array_color[14]);
 
 void free_color(SDL_Surface * array_color[14]);
 
+void free_square(square_ptr square);
+
 #endif
