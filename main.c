@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 {
   initSDL();
   int end,click,nb_pento,array_end = 0;
+  end = 0;
   FILE *file;
   int i,j;
   char array_file [1000];
