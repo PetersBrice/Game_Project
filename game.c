@@ -378,6 +378,7 @@ void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],ch
     pos_time.y = 5;
     SDL_BlitSurface(time,NULL,screen,&pos_time);
   }
+  SDL_FreeSurface(time);
 }
 
 /* draw the pentomino, the area and the background */
