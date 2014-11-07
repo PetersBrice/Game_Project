@@ -32,7 +32,9 @@ void update_coat (pentomino_ptr pento_array[20],int selected,int nb_pento);
 /* write the controls */
 SDL_Surface * write_controls (void);
 
-void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls);
+void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char hr [3],TTF_Font * police,SDL_Color color);
+
+void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls,int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char h [3],TTF_Font * police,SDL_Color color);
 
 void free_all(area_ptr area,pentomino_ptr pento_array[20],char array_file[1000],int array_end);
 #endif

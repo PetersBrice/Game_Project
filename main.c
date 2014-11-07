@@ -12,25 +12,33 @@ int HEIGHT = 600;
 int main(int argc, char** argv)
 {
   initSDL();
-  int end,click,nb_pento,array_end = 0;
+  int end,click,nb_pento,array_end,i,j;
   end = 0;
   FILE *file;
-  int i,j;
   int timer = 0;
   char array_file [1000];
   pentomino_ptr pento_array[20];
   area_ptr area = NULL;
-  int pos_mouse_x,pos_mouse_y=0;
+  int pos_mouse_x = 0;
+  int pos_mouse_y = 0;
   SDL_Surface * array_color[14];
   SDL_Surface * background = NULL;
   SDL_Surface * text_controls = NULL;
   SDL_Rect pos_background;
   SDL_Rect pos_text_controls;
+  SDL_Color color = {0,0,0,0};
+  char sec [2] = "";
+  char mn [2] = "";
+  char hr [2] = "";
+  int seconds = 0;
+  int minutes = 0;
+  int hours = 0;
+  TTF_Font * police = TTF_OpenFont("CaviarDreams_Bold.ttf",16);
 
   // load the text for the controls and his position
   text_controls =  write_controls();
   pos_text_controls.x = 10;
-  pos_text_controls.y = 10;
+  pos_text_controls.y = 4;
 
   // load the background and his position
   background = SDL_LoadBMP("background.bmp");
@@ -56,7 +64,7 @@ int main(int argc, char** argv)
   tab_pento (array_file,pento_array,array_end,array_color);
 
   /* draw the pentomino, the area and the background */
-  draw_all (array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls);
+  draw_all (array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls,timer,&seconds,&minutes,&hours,sec,mn,hr,police,color);
 
   while (end != 1){
     /* update the timer */
@@ -64,17 +72,17 @@ int main(int argc, char** argv)
     /* wait an action of the player */
     controls(nb_pento,&end,pento_array,&click,&pos_mouse_x,&pos_mouse_y,array_file,area,array_end);
     /* update the screen */
-    draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls);
+    draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls,timer,&seconds,&minutes,&hours,sec,mn,hr,police,color);
     /* end of the game */
     if (final_test(array_file,pento_array,area,array_end)){
       end = 1;
     }
   }
   /* free all */
-  free_area(area);
   free_color(array_color);
   free_all(area,pento_array,array_file,array_end);
   SDL_FreeSurface(background);
+TTF_CloseFont(police);
   return EXIT_SUCCESS;
 }
 

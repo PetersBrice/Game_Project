@@ -129,8 +129,8 @@ void free_area(area_ptr area,char array_file[1000]){
   for(i = 0;i < size;i++){
     free_square(area->square[i]);
   }
-  free(area->square_sprite);
-  free(area->contour_sprite);
+  SDL_FreeSurface(area->square_sprite);
+  SDL_FreeSurface(area->contour_sprite);
   free(area);
 }
 
