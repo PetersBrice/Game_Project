@@ -343,6 +343,7 @@ void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],ch
     pos_time.x = 685;
     pos_time.y = 5;
     SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_FreeSurface(time);
     // seconds
     if ((timer/1000) - (60 * *minutes) - (3600 * *hours)  == 60){
       *minutes = *minutes + 1;
@@ -355,6 +356,7 @@ void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],ch
     pos_time.x = 750;
     pos_time.y = 5;
     SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_FreeSurface(time);
     // minutes
     if (*minutes == 60){
       *hours = *hours + 1;
@@ -365,6 +367,7 @@ void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],ch
     pos_time.x = 700;
     pos_time.y = 5;
     SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_FreeSurface(time);
     // hours
     sprintf(hr,"%d",*hours);
     time = TTF_RenderText_Solid(police,hr,color);
