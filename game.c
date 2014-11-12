@@ -321,28 +321,25 @@ void update_coat (pentomino_ptr pento_array[20],int selected,int nb_pento)
 }
 
 /* write the controls */
-SDL_Surface * write_controls (void)
+SDL_Surface * write_controls (SDL_Color color)
 {
   // load the police Orial, size 40, black color
-  TTF_Font * police = TTF_OpenFont("orialbold.ttf",20); 
-  SDL_Color color = {0,0,0,0};
+  TTF_Font * police = TTF_OpenFont("orialbold.ttf",20);
   // picture of the text
   SDL_Surface * text_controls = TTF_RenderText_Blended(police, "ESCAPE : quit   A : mirror   E : turn", color);
   TTF_CloseFont(police);
   return text_controls;
 }
 
-void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char hr [3],TTF_Font * police,SDL_Color color)
+void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char hr [3],TTF_Font * police,SDL_Color color,SDL_Rect pos_time_h_m_s,SDL_Rect pos_time_s,SDL_Rect pos_time_m,SDL_Rect pos_time_h,SDL_Rect pos_time_inf)
 {
   SDL_Surface *time;
-  SDL_Rect pos_time;
+  //SDL_Rect pos_time;
   // if 99 hours is not exceed
   if(timer < (3600 * 1000 * 99)){
     // write just "h  mn  s"
     time = TTF_RenderText_Solid(police,"h     mn     s",color);
-    pos_time.x = 685;
-    pos_time.y = 5;
-    SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_BlitSurface(time,NULL,screen,&pos_time_h_m_s);
     SDL_FreeSurface(time);
     // seconds
     if ((timer/1000) - (60 * *minutes) - (3600 * *hours)  == 60){
@@ -353,9 +350,7 @@ void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],ch
     }
     sprintf(sec,"%d",*seconds);
     time = TTF_RenderText_Solid(police,sec,color);
-    pos_time.x = 750;
-    pos_time.y = 5;
-    SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_BlitSurface(time,NULL,screen,&pos_time_s);
     SDL_FreeSurface(time);
     // minutes
     if (*minutes == 60){
@@ -364,33 +359,52 @@ void write_timer (int timer,int *seconds,int *minutes,int *hours,char sec [2],ch
     }
     sprintf(mn,"%d",*minutes);
     time = TTF_RenderText_Solid(police,mn,color);
-    pos_time.x = 700;
-    pos_time.y = 5;
-    SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_BlitSurface(time,NULL,screen,&pos_time_m);
     SDL_FreeSurface(time);
     // hours
     sprintf(hr,"%d",*hours);
     time = TTF_RenderText_Solid(police,hr,color);
-    pos_time.x = 660;
-    pos_time.y = 5;
-    SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_BlitSurface(time,NULL,screen,&pos_time_h);
   }else{
     // if 99 hours is exceed
     time = TTF_RenderText_Solid(police,"infinity",color);
-    pos_time.x = 740;
-    pos_time.y = 5;
-    SDL_BlitSurface(time,NULL,screen,&pos_time);
+    SDL_BlitSurface(time,NULL,screen,&pos_time_inf);
   }
   SDL_FreeSurface(time);
 }
 
+/* write the names of the developers */
+void write_developers (SDL_Color color,TTF_Font * police)
+{
+  // load the police Orial, size 40, black color
+  //TTF_Font * police = TTF_OpenFont("orialbold.ttf",20);
+  // picture of the text
+  SDL_Surface * developers = TTF_RenderText_Blended(police, "Developers : Anais Decolle & Brice Peters", color);
+  SDL_Rect pos;
+  pos.x = 225;
+  pos.y = 400;
+  SDL_BlitSurface(developers,NULL,screen,&pos);
+  SDL_FreeSurface (developers);
+  //TTF_CloseFont(police);
+}
+
+/* draw the screen when the game is ended */
+void draw_end_screen (SDL_Surface * background,SDL_Rect pos_background,int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char hr [3],TTF_Font * police,SDL_Color color,SDL_Rect pos_time_h_m_s,SDL_Rect pos_time_s,SDL_Rect pos_time_m,SDL_Rect pos_time_h,SDL_Rect pos_time_inf)
+{
+  SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));
+  SDL_BlitSurface(background,NULL,screen,&pos_background);
+  write_timer(timer,seconds,minutes,hours,sec,mn,hr,police,color,pos_time_h_m_s,pos_time_s,pos_time_m,pos_time_h,pos_time_inf);
+  write_developers(color,police);
+  SDL_Flip(screen);
+}
+
 /* draw the pentomino, the area and the background */
-void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls,int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char hr [3],TTF_Font * police,SDL_Color color)
+void draw_all (char array_file [1000],area_ptr area,SDL_Surface * square_sprite,int array_end,pentomino_ptr pento_array[20],SDL_Surface * background,SDL_Rect pos_background,SDL_Surface * text_controls,SDL_Rect pos_text_controls,int timer,int *seconds,int *minutes,int *hours,char sec [2],char mn [2], char hr [3],TTF_Font * police,SDL_Color color,SDL_Rect pos_time_h_m_s,SDL_Rect pos_time_s,SDL_Rect pos_time_m,SDL_Rect pos_time_h,SDL_Rect pos_time_inf)
 {
   SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));
   SDL_BlitSurface(background,NULL,screen,&pos_background);
   SDL_BlitSurface(text_controls,NULL,screen,&pos_text_controls);
-  write_timer (timer,seconds,minutes,hours,sec,mn,hr,police,color);
+  write_timer (timer,seconds,minutes,hours,sec,mn,hr,police,color,pos_time_h_m_s,pos_time_s,pos_time_m,pos_time_h,pos_time_inf);
   draw_area (array_file,area,square_sprite,screen);
   draw_array(pento_array,array_file,array_end,screen);
   SDL_Flip(screen);
