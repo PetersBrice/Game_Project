@@ -7,6 +7,7 @@
 int WIDTH = 800;
 int HEIGHT = 600;
 #include "game.h"
+#include <SDL/SDL_mixer.h>
 
 int main(int argc, char** argv)
 {
@@ -80,6 +81,13 @@ int main(int argc, char** argv)
 
   // draws all on the screen
   draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls,timer,&seconds,&minutes,&hours,sec,mn,hr,police,color,pos_time_h_m_s,pos_time_s,pos_time_m,pos_time_h,pos_time_inf);
+  /*music*/
+  if(!Mix_OpenAudio(MIX_DEFAULT_FREQUENCY,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,10024)==0){
+    printf("music error\n");
+  }
+  Mix_Music *music = NULL;
+  music = Mix_LoadMUS("jouch.mp3");
+  Mix_PlayMusic(music,-1);
 
   while(end != 1){
     // updates the timer 
@@ -109,6 +117,7 @@ int main(int argc, char** argv)
   }
 
   // free all
+  Mix_FreeMusic(music);
   free_color(array_color);
   free_all(area,pento_array,array_file,array_end);
   SDL_FreeSurface(text_controls);

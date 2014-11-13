@@ -4,6 +4,7 @@
 int width = 800;
 int height = 600;
 
+/*create new pentomino*/
 pentomino_ptr new_pentomino(int position)
 {
   int i,j;
@@ -20,6 +21,7 @@ pentomino_ptr new_pentomino(int position)
   return new_pent;
 }
 
+/*draw one pentomino*/
 void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *screen)
 {
   int i ;
@@ -28,7 +30,9 @@ void draw_pentomino(pentomino_ptr pentomino,SDL_Surface *screen)
   }
 }
 
-int new_array(char array_file[1000],int pos_file,char array_pent[5][5]){
+/*get the array of the pentomino return the pos in the tab*/
+int new_array(char array_file[1000],int pos_file,char array_pent[5][5])
+{
   int i,j,Nb_square=0;
   for(i=0;i<5;i++){
     for(j=0;j<5;j++){
@@ -53,7 +57,7 @@ int new_array(char array_file[1000],int pos_file,char array_pent[5][5]){
   return pos_file+2;
 }
 
-
+/*get the square from the array of one pentomino*/
 void get_square(square_ptr square[5] ,char array_pent[5][5],int pos_x,int pos_y){
   int i,j,nb_square;
   nb_square = 0;
@@ -76,7 +80,9 @@ void get_square(square_ptr square[5] ,char array_pent[5][5],int pos_x,int pos_y)
   }
 }
 
-void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[14]){
+/*create a tab with all the pentomino*/
+void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[14])
+{
   int nb_pento,i,pos_file,pos_pento;
   int j = 0;
   pos_pento = 50;
@@ -99,8 +105,9 @@ void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_e
 } 
      
 
-      
-void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *screen){
+/*draw all the pentomino*/
+void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *screen)
+{
   int i,nb_pento;
   nb_pento = nb_pent(array_file,array_end);
     for (i = 0;i<nb_pento;i++){
@@ -110,8 +117,9 @@ void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_en
 }
 
 
-
-int pos_x_array(pentomino_ptr pent){
+/*return the pos of the array use in turn pentomino*/
+int pos_x_array(pentomino_ptr pent)
+{
   int i,j,pos_x,pos_y;
   bool find;
   pos_x = 10000;
@@ -138,7 +146,9 @@ int pos_x_array(pentomino_ptr pent){
   return pos_x;
 }
 
-int pos_y_array(pentomino_ptr pent){
+/*return the pos of the array use in turn pentomino*/
+int pos_y_array(pentomino_ptr pent)
+{
   int i,j,pos_y;
   bool find;
   i = 0;
@@ -160,7 +170,9 @@ int pos_y_array(pentomino_ptr pent){
   return pos_y;
 }
 
-int min_x_pent(pentomino_ptr pent){
+/*give the smallest x of the pentomino*/
+int min_x_pent(pentomino_ptr pent)
+{
   int i;
   int min_x = 10000;
   for(i = 0 ; i < 5 ; i++){
@@ -174,7 +186,9 @@ int min_x_pent(pentomino_ptr pent){
   return min_x;
 }
 
-int min_y_pent(pentomino_ptr pent){
+/*give the smallest x of the pentomino*/
+int min_y_pent(pentomino_ptr pent)
+{
   int i;
   int min_y = 10000;
   for(i = 0 ; i < 5 ; i++){
@@ -185,7 +199,9 @@ int min_y_pent(pentomino_ptr pent){
   return min_y;
 }
 
-void free_pentomino(pentomino_ptr pentomino){
+/*free one pentomino*/
+void free_pentomino(pentomino_ptr pentomino)
+{
   int i;
   for(i = 0 ;i < 5;i ++){
     free_square(pentomino->square[i]);
@@ -193,7 +209,9 @@ void free_pentomino(pentomino_ptr pentomino){
   free(pentomino);
 }
 
-void free_pento_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end){
+/*free all pentomino*/
+void free_pento_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end)
+{
   int i,nb_pento;
   nb_pento = nb_pent(array_file,array_end); 
   for(i = 0;i<nb_pento;i++){

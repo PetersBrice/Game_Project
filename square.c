@@ -1,6 +1,7 @@
 #include "square.h"
 #include <assert.h>
 
+/*create ew sprite*/
 square_ptr new_square(SDL_Rect rcSrc,SDL_Rect rcSprite)
 {
   square_ptr new_square = (square_ptr)malloc(sizeof(struct square));
@@ -10,6 +11,7 @@ square_ptr new_square(SDL_Rect rcSrc,SDL_Rect rcSprite)
   return new_square;
 }
 
+/*draw the square*/
 void draw_square(square_ptr square,SDL_Surface *square_sprite,SDL_Surface *background)
 {
   assert(square);
@@ -19,6 +21,7 @@ void draw_square(square_ptr square,SDL_Surface *square_sprite,SDL_Surface *backg
   SDL_BlitSurface(square_sprite,NULL,background,&pos_square);
 }
 
+/*create a array with the color*/
 void tab_color(SDL_Surface * array_color[14])
 {
   array_color[0] = SDL_LoadBMP("blue.bmp");
@@ -46,6 +49,8 @@ void free_color(SDL_Surface * array_color[14])
   }
 }
 
-void free_square(square_ptr square){
+/*free square*/
+void free_square(square_ptr square)
+{
   free(square);
 }

@@ -1,14 +1,18 @@
 #include "file.h"
 
-int file_array(char array_file[1000],FILE *file) {
+/*get a table with all the char in the file and return the end of the file*/
+int file_array(char array_file[1000],FILE *file) 
+{
   int i = -1;
   while(!feof(file) && i++<1000) {
+    /*put one char on the file*/
     array_file[i] = (char)fgetc(file);
   }
   return i;
 }
-
-int begin_pent (char array_file[1000]){
+/*get the pos in the array where the pentomino begin*/
+int begin_pent (char array_file[1000])
+{
   bool start = false;
   int i = 0;
   while(!start && i<1000){
@@ -20,7 +24,9 @@ int begin_pent (char array_file[1000]){
   return i+1;
 }
 
-int nb_pent(char array_file[1000], int array_end) {
+/*return the number of pent*/
+int nb_pent(char array_file[1000], int array_end) 
+{
   int nb_square,i;
   nb_square = 0;
   i = begin_pent(array_file);
@@ -33,7 +39,9 @@ int nb_pent(char array_file[1000], int array_end) {
   return nb_square/5;
 }
 
-int size_area(char array_file[1000]){
+/*return the number of square in the area*/
+int size_area(char array_file[1000])
+{
   bool end = false;
   int area_size,i;
   i = 0;

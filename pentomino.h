@@ -20,7 +20,6 @@ typedef struct pentomino
   char array_pent[5][5];
   int position;
   square_ptr square[5];
-  int set ;
   int coat;
   SDL_Surface * square_sprite;
 } * pentomino_ptr;
@@ -40,21 +39,25 @@ void get_square(square_ptr square[5],char array_pent[5][5] ,int pos_x,int pos_y)
 /*create a table of pentomino*/
 void tab_pento (char array_file[1000],pentomino_ptr pento_array[20], int array_end,SDL_Surface * array_color[14]);
 
-
+/*draw all the pentomino*/
 void draw_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end ,SDL_Surface *screen);
 
-void free_pento(pentomino_ptr pentomino);
-
+/*give the smallest x of the pentomino*/
 int min_x_pent(pentomino_ptr pent);
 
+/*give the smallest y of the pentomino*/
 int min_y_pent(pentomino_ptr pent);
 
+/*give the pos of the array to turn the pentomino*/
 int pos_x_array(pentomino_ptr pent);
 
+/*give the pos of the array to turn the pentomino*/
 int pos_y_array(pentomino_ptr pent);
 
+/*free one pentomino*/
 void free_pentomino(pentomino_ptr pentomino);
 
+/*free all pentomino*/
 void free_pento_array(pentomino_ptr pento_array[20],char array_file[1000],int array_end);
 
 #endif

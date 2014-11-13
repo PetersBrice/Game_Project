@@ -25,7 +25,9 @@ void draw_area(char array_file[1000],area_ptr area,SDL_Surface *square_sprite,SD
   }
 }
 
-void get_area(char array_file[1000],char shape[15][15]){
+/*get the shape of the area*/
+void get_area(char array_file[1000],char shape[15][15])
+{
   int size,i,j,nb_square,pos_file;
   nb_square=0;
   size = size_area(array_file);
@@ -52,7 +54,9 @@ void get_area(char array_file[1000],char shape[15][15]){
   }
 }
 
-void get_square_area(char array_file[1000],char array_area[15][15],square_ptr square[225],int pos_x,int pos_y){
+/*get the square of the area*/
+void get_square_area(char array_file[1000],char array_area[15][15],square_ptr square[225],int pos_x,int pos_y)
+{
   int i,j,nb_square,size;
   nb_square = 0;
   size = size_area(array_file);
@@ -75,7 +79,9 @@ void get_square_area(char array_file[1000],char array_area[15][15],square_ptr sq
   }
 }
 
-int max_x_area(area_ptr area,char array_file[1000]){
+/*get the highest x in of the area*/
+int max_x_area(area_ptr area,char array_file[1000])
+{
   int i,max,size;
   max = 0;
   size = size_area(array_file);
@@ -87,7 +93,9 @@ int max_x_area(area_ptr area,char array_file[1000]){
   return max + SIZE_SQUARE;
 }
 
-int max_y_area(area_ptr area,char array_file[1000]){
+/*get the highest y in the area*/
+int max_y_area(area_ptr area,char array_file[1000])
+{
   int i,max,size;
   max = 0;
   size = size_area(array_file);
@@ -99,7 +107,9 @@ int max_y_area(area_ptr area,char array_file[1000]){
   return max + SIZE_SQUARE;
 }
 
-int min_x_area(area_ptr area,char array_file[1000]){
+/*get the smallest x of the area*/
+int min_x_area(area_ptr area,char array_file[1000])
+{
   int i,min,size;
   min = max_x_area(area,array_file);
   size = size_area(array_file);
@@ -111,7 +121,9 @@ int min_x_area(area_ptr area,char array_file[1000]){
   return min;
 }
 
-int min_y_area(area_ptr area,char array_file[1000]){
+/*get the smallest y of the area*/
+int min_y_area(area_ptr area,char array_file[1000])
+{
   int i,min,size;
   min = max_y_area(area,array_file);
   size = size_area(array_file);
@@ -123,7 +135,9 @@ int min_y_area(area_ptr area,char array_file[1000]){
   return min;
 }
 
-void free_area(area_ptr area,char array_file[1000]){
+/*free the area*/
+void free_area(area_ptr area,char array_file[1000])
+{
   int size,i;
   size = size_area(array_file);
   for(i = 0;i < size;i++){
