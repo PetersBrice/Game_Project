@@ -219,7 +219,7 @@ void initSDL (void)
   // icon of the game
   SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"),NULL);
   // load the screen
-  screen = SDL_SetVideoMode(WIDTH,HEIGHT,32,SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+  screen = SDL_SetVideoMode(WIDTH,HEIGHT,32,SDL_SWSURFACE | SDL_DOUBLEBUF);
   // title of the game
   SDL_WM_SetCaption("PUZZLE",NULL);
 }

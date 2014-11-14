@@ -35,7 +35,7 @@ int nb_pent(char array_file[1000], int array_end)
        nb_square++;
     }
   }
-  assert((nb_square/5)*5 == nb_square);
+  //assert((nb_square/5)*5 == nb_square);
   return nb_square/5;
 }
 
@@ -62,12 +62,20 @@ bool test_file(char array_file[1000],int array_end)
 {
   int nb_square = 0;
   int i;
+  bool dim_pento ;
   bool format = true;
   for(i = 0;i < array_end;i++){
     if (!(array_file[i] == '#' || array_file[i] == '\n' || array_file[i] == ' ')){
-      printf("%c\n",array_file[i]);
       format = false;
     }
+  }
+  for(i = begin_pent(array_file);i < array_end;i++){
+    if(array_file[i] == '#'){
+    nb_square ++;
+    }
+  }
+  if(nb_square%5 != 0){
+    format = false;
   }
   return format;
 }

@@ -7,5 +7,5 @@ background : http://pixabay.com/fr/l-arri%C3%A8re-plan-fond-fond-d-%C3%A9cran-29
 polices : http://www.dafont.com/fr/orial.font
 http://www.dafont.com/fr/caviar-dreams.font
 
-
+licence of this program : Creative Commons
 ============

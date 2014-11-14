@@ -61,18 +61,54 @@ int main(int argc, char** argv)
   pos_background.x = 0;
   pos_background.y = 0;
 
+
   // opens the pentomino file  
-  file = fopen("pentomino.txt", "r");
+  file = fopen("2.txt", "r");
+
+  // tests if the file is too big
+  
+  fseek(file,0,SEEK_END);
+  long int weight = ftell(file);
+  if(weight > 1000){
+    printf("\nThe file is too big.\n");
+    fclose(file);
+    SDL_FreeSurface(text_controls);
+    SDL_FreeSurface(background);
+    TTF_CloseFont(police);
+    return EXIT_SUCCESS;
+  }
+ 
+
   // beginning of the file
   rewind(file);
   // end of the file
   array_end = file_array(array_file,file);
   // closes the file
   fclose(file);
-  
-  
+
   // says the number of pentominos
   nb_pento = nb_pent(array_file,array_end);
+  
+  // tests the compatibility of the file
+   if(test_file(array_file,array_end)){
+     printf("\nThe file is correct.\n");
+    }else{
+      printf("\nThe file is not correct (invalid size of pentomino or invalid caracters).\n");
+      SDL_FreeSurface(text_controls);
+      SDL_FreeSurface(background);
+      TTF_CloseFont(police);
+      return EXIT_SUCCESS;
+    }	
+  if (!test_pento(array_file,nb_pento)){
+    printf("\nMan can't finish the game.\n");
+    SDL_FreeSurface(text_controls);
+    SDL_FreeSurface(background);
+    TTF_CloseFont(police);
+    return EXIT_SUCCESS;
+  }else{
+    printf("\nYou can finish this puzzle.\n");
+  }
+  
   // loads the sprites
   tab_color(array_color);
   // creates the area
@@ -91,18 +127,7 @@ int main(int argc, char** argv)
     music = Mix_LoadMUS("jouch.mp3");
     Mix_PlayMusic(music,-1);
   
-  if(test_file(array_file,array_end)){
-      printf("\nthe file is correct\n");
-    }else{
-      printf("\nthe file is not correct\n");
-      end = 1;
-    }	
-  if (!test_pento(array_file,nb_pento)){
-    printf("\ncan't finish this array\n");
-    end = 1;
-  }else{
-    printf("\nyou can finish this pentomino\n");
-  }
+ 
   while(end != 1){
     // updates the timer 
     timer = SDL_GetTicks();
