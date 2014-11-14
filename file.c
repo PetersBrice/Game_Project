@@ -6,6 +6,9 @@ int file_array(char array_file[1000],FILE *file)
   int i = -1;
   while(!feof(file) && i++<1000) {
     /*put one char on the file*/
+    /*if((char)fgetc(file) != fgetc(file)){
+      printf("\n pas bon \n");
+      }*/
     array_file[i] = (char)fgetc(file);
   }
   return i;
@@ -16,9 +19,9 @@ int begin_pent (char array_file[1000])
   bool start = false;
   int i = 0;
   while(!start && i<1000){
-    if(array_file[i] == '\n' && array_file[i+1] == '\n'){
+     if(array_file[i] == '\n' && array_file[i+1] == '\n'){
       start = true;
-    }
+      }
     i++;
   }
   return i+1;

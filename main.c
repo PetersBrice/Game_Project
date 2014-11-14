@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 
 
   // opens the pentomino file  
-  file = fopen("2.txt", "r");
+  file = fopen("7.txt", "r");
 
   // tests if the file is too big
   
