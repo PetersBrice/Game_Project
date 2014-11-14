@@ -18,6 +18,9 @@ int nb_pent(char array_file[1000], int array_end);
 /*return the number of square in the area*/
 int size_area(char array_file[1000]);
 
+/*see if there's something else than #*/
+bool test_file(char array_file[1000],int array_end);
+
 #endif
 
 

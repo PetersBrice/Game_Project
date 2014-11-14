@@ -69,7 +69,8 @@ int main(int argc, char** argv)
   array_end = file_array(array_file,file);
   // closes the file
   fclose(file);
-
+  
+  
   // says the number of pentominos
   nb_pento = nb_pent(array_file,array_end);
   // loads the sprites
@@ -78,17 +79,30 @@ int main(int argc, char** argv)
   area = init_area(array_file,230,100,array_color);
   // sets the pentominos in an array
   tab_pento(array_file,pento_array,array_end,array_color);
-
+  
   // draws all on the screen
-  draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls,timer,&seconds,&minutes,&hours,sec,mn,hr,police,color,pos_time_h_m_s,pos_time_s,pos_time_m,pos_time_h,pos_time_inf);
+   draw_all(array_file,area,area->square_sprite,array_end,pento_array,background,pos_background,text_controls,pos_text_controls,timer,&seconds,&minutes,&hours,sec,mn,hr,police,color,pos_time_h_m_s,pos_time_s,pos_time_m,pos_time_h,pos_time_inf);
   /*music*/
-  if(!Mix_OpenAudio(MIX_DEFAULT_FREQUENCY,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,10024)==0){
+  
+    if(!Mix_OpenAudio(MIX_DEFAULT_FREQUENCY,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,10024)==0){
     printf("music error\n");
+    }
+    Mix_Music *music = NULL;
+    music = Mix_LoadMUS("jouch.mp3");
+    Mix_PlayMusic(music,-1);
+  
+  if(test_file(array_file,array_end)){
+      printf("\nthe file is correct\n");
+    }else{
+      printf("\nthe file is not correct\n");
+      end = 1;
+    }	
+  if (!test_pento(array_file,nb_pento)){
+    printf("\ncan't finish this array\n");
+    end = 1;
+  }else{
+    printf("\nyou can finish this pentomino\n");
   }
-  Mix_Music *music = NULL;
-  music = Mix_LoadMUS("jouch.mp3");
-  Mix_PlayMusic(music,-1);
-
   while(end != 1){
     // updates the timer 
     timer = SDL_GetTicks();
@@ -111,11 +125,10 @@ int main(int argc, char** argv)
       pos_time_inf.y = 150;
       // draw the end screen
       draw_end_screen(background,pos_background,timer,&seconds,&minutes,&hours,sec,mn,hr,police,color,pos_time_h_m_s,pos_time_s,pos_time_m,pos_time_h,pos_time_inf);
-      SDL_Delay(3000);
-      end = 1;
-      }
+	SDL_Delay(3000);
+	end = 1;
+    }
   }
-
   // free all
   Mix_FreeMusic(music);
   free_color(array_color);

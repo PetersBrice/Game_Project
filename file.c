@@ -56,3 +56,21 @@ int size_area(char array_file[1000])
   }
   return area_size;
 }
+
+/*see if there's something else than #*/
+bool test_file(char array_file[1000],int array_end)
+{
+  int nb_square = 0;
+  int i;
+  bool format = true;
+  for(i = 0;i < array_end;i++){
+    if (!(array_file[i] == '#' || array_file[i] == '\n' || array_file[i] == ' ')){
+      printf("%c\n",array_file[i]);
+      format = false;
+    }
+  }
+  return format;
+}
+  
+
+

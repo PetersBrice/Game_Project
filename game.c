@@ -98,7 +98,17 @@ bool final_test (char array_file[1000],pentomino_ptr pento_array[20],area_ptr ar
 bool test_pento (char array_file[1000],int nb_pento)
 {
   int area = size_area(array_file);
-  return area % nb_pento == 0;
+  int dif;
+  dif =  nb_pento*5 - area;
+  if(dif<0){
+    return false;
+  }else{
+    if (dif == 0){
+      return true;
+    }else{
+      return dif % 5 == 0;
+    }
+  }
 }
 
 /* modifies the array of the pentomino to make the mirror of the pentomino */
